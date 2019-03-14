@@ -1,0 +1,127 @@
+body{
+    width: 100vw;
+    height: 100vh;
+}
+
+html{
+    overflow-y : hidden;
+}
+
+@font-face {
+    font-family: "road rage";
+    src: url("../assets/Road_Rage.otf") format("opentype")
+}
+
+@font-face {
+    font-family: "retro";
+    src: url("../assets/retro_computer_personal_use.ttf") format("opentype")
+}
+
+.dnone{
+    visibility: hidden;
+}
+
+.z-font{
+    font-family: 'retro';
+    color: #4c4cff;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: white;
+    font-size: 7em;
+    text-shadow: 2px 10px black;
+}
+
+.i-font{
+    color: #4c4cff;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+    font-size: 5em;
+    text-shadow: 2px 10px black;
+    padding-right: 10px;
+}
+
+
+#icon-list{
+    margin-top: -40px;
+}
+
+#content-container{
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(238deg, #40007f, #00007f, #4c4cff);
+    background-size: 600% 600%;
+    -webkit-animation: ZetaBack 20s ease infinite;
+    -moz-animation: ZetaBack 20s ease infinite;
+    animation: ZetaBack 20s ease infinite;
+    background-repeat: no-repeat;
+    position: fixed;
+}
+
+#particles{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 1;
+}
+
+#lattice-container{
+    width: 100%;
+    height: 100%;
+    z-index: 2 !important;
+    position: relative;
+}
+
+#logo{
+    z-index: 3 !important;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#footer{
+    z-index: 3 !important;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: 10px;
+    color: white;
+}
+
+.floating {
+    -webkit-animation-name: Floatingx;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+    -moz-animation-name: Floating;
+    -moz-animation-duration: 4s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease-in-out;
+}
+
+@-webkit-keyframes Floatingx {
+    from {-webkit-transform:translate(0, 0px);}
+    50% {-webkit-transform:translate(0, -10px);}
+    to {-webkit-transform: translate(0, -0px);}    
+}
+
+@-moz-keyframes Floating {
+    from {-moz-transform:translate(0, 0px);}
+    50% {-moz-transform:translate(0, -10px);}
+    to {-moz-transform: translate(0, -0px);}    
+}
+
+@-webkit-keyframes ZetaBack {
+    0%{background-position:0% 9%}
+    50%{background-position:100% 92%}
+    100%{background-position:0% 9%}
+}
+@-moz-keyframes ZetaBack {
+    0%{background-position:0% 9%}
+    50%{background-position:100% 92%}
+    100%{background-position:0% 9%}
+}
+@keyframes ZetaBack { 
+    0%{background-position:0% 9%}
+    50%{background-position:100% 92%}
+    100%{background-position:0% 9%}
+}
