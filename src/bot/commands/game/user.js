@@ -29,9 +29,7 @@ module.exports.load = client => {
                 embed.setTimestamp()
                 embed.setColor(client.settings.embed_color)
                 
-                if(res.beta_status){
-                    embed.setThumbnail(`https://i.imgur.com/rxkNCaG.png`)
-                }
+                if(res.beta_status) embed.setThumbnail(`https://i.imgur.com/rxkNCaG.png`)
 
                 await message.channel.send(embed)
                 .catch(e => client.log(`Error sending message to ${message.author.username}#${message.author.discriminator}.`))
