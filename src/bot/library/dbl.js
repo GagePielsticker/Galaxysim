@@ -10,7 +10,7 @@ module.exports = client => {
         //try and post stats to dbl every x seconds
         setInterval(() => {
             try{
-                let num = client.guilds.size + client.spoof
+                let num = client.guilds.size
                 client.dbl.postStats(num)
             } catch(e) {
                 client.log('Couldnt post stats to DBL!')

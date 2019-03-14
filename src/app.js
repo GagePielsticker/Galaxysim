@@ -12,8 +12,6 @@ client.cron = require('cron').CronJob
 client.humanize = require('humanize-duration')
 let DBL = require('dblapi.js')
 
-client.spoof = 10
-
 client.commands = {} 
 client.cooldowns = {}
 client.cooldowns.action = []

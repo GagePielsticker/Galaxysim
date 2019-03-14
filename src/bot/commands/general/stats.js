@@ -23,7 +23,7 @@ module.exports.load = client => {
             .setDescription(client.settings.bot_description)
 
             .addField('Users', `\`${client.users.size}\``, true)
-            .addField('Guilds', `\`${client.guilds.size + client.spoof}\``, true)
+            .addField('Guilds', `\`${client.guilds.size}\``, true)
             .addField('Language', '\`NodeJS\`', true)
             .addField('Support Server', `[Click Here](${client.settings.support_server_url})`, true)
             .addField('Website', `[Click Here](${client.settings.website_url})`, true)
