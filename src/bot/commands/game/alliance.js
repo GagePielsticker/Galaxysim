@@ -387,7 +387,7 @@ module.exports.load = client => {
                             let output = []
                             let i = 1
                             await leaderboard.forEach(e => {
-                                output.push(`${i}.) \`${e.split('|')[0]} - ${e.split('|')[1].toLocaleString()}\``)
+                                output.push(`${i}.) \`${e.split('|')[0]} - ${parseInt(e.split('|')[1]).toLocaleString()}\``)
                                 i++
                             })
                             let embed = new client.discord.RichEmbed()

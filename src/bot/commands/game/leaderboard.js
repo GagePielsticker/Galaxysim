@@ -26,7 +26,7 @@ module.exports.load = client => {
                     await leaderboard.forEach(e => {
                         client.fetchUser(e.split('|')[0], true)
                         .then(u => {
-                            output.push(`${i}.) \`${u.username}#${u.discriminator} - ${e.split('|')[1].toLocaleString()}\``)
+                            output.push(`${i}.) \`${u.username}#${u.discriminator} - ${parseInt(e.split('|')[1]).toLocaleString()}\``)
                             i++
                         })
                     })

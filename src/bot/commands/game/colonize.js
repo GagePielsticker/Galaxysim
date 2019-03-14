@@ -26,7 +26,7 @@ module.exports.load = client => {
                         }
                     }
                     if(p_pos == null) return client.send_error(message, 'There is no planet in this system with that id.')
-                    if(user_res.credits - colony_cost < 0) return client.send_error(message, `You can\'t afford this colony, it would cost \`${colony_cost}\` credits.`)
+                    if(user_res.credits - colony_cost < 0) return client.send_error(message, `You can\'t afford this colony, it would cost \`${colony_cost.toLocaleString()}\` credits.`)
                     if(sys_res.planets[p_pos].owner != null) return client.send_error(message, 'This planet is already owned.')
                     let embed = new client.discord.RichEmbed()
                     .setTitle('Colonize')
