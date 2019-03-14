@@ -121,6 +121,7 @@ module.exports = client => {
         client.create_system(x_spawn, y_spawn)
         let u = {
             id : d_id,
+            beta_status : false,
             x_pos: x_spawn,
             y_pos: y_spawn,
             credits: client.settings.game.starting_credits,

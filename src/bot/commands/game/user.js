@@ -9,7 +9,7 @@ module.exports.load = client => {
 
         run(message) {
             client.load_user_data(message.author.id, async res => {
-                let embed = new client.discord.RichEmbed()
+                let embed = await new client.discord.RichEmbed()
                 embed.setTitle('User')
                 embed.setDescription('This page contains general user information for your player.')
                 embed.addField('Position X|Y', `\`${res.x_pos} | ${res.y_pos}\``, true)
@@ -29,6 +29,10 @@ module.exports.load = client => {
                 embed.setTimestamp()
                 embed.setColor(client.settings.embed_color)
                 
+                if(res.beta_status){
+                    embed.setThumbnail(`https://i.imgur.com/rxkNCaG.png`)
+                }
+
                 await message.channel.send(embed)
                 .catch(e => client.log(`Error sending message to ${message.author.username}#${message.author.discriminator}.`))
             })
