@@ -43,9 +43,7 @@ web.path = require('path')
 web.ejs = require('ejs')
 web.discord_strategy = require('passport-discord').Strategy
 
-if(client.settings.dev_mode){
-    web.settings.callback = web.settings.beta_callback
-}
+if(client.settings.dev_mode) {web.settings.callback = web.settings.beta_callback}
 
 web.sess = web.session({
     secret: 'Afjjj-fa08fo-fffw',

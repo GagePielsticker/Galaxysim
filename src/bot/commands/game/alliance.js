@@ -4,7 +4,7 @@ module.exports.load = client => {
             'name' : 'Alliance',
             'type' : 2,
             'description' : 'Join, Create, modify, and leave alliances.',
-            'usage' : `--all users--\n${client.settings.prefix}ally members\n${client.settings.prefix}ally leaderboard\n${client.settings.prefix}ally join {name}\n${client.settings.prefix}ally stats\n${client.settings.prefix}ally leave\n${client.settings.prefix}ally create {name}\n${client.settings.prefix}ally invest {amount}\n\n--alliance owners--\n${client.settings.prefix}ally disband\n${client.settings.prefix}ally kick {user}\n${client.settings.prefix}ally apps list {#}\n${client.settings.prefix}ally apps accept {name}\n${client.settings.prefix}ally apps deny {name}`
+            'usage' : `--all users--\n${client.settings.prefix}ally members\n${client.settings.prefix}ally leaderboard\n${client.settings.prefix}ally join {name}\n${client.settings.prefix}ally stats\n${client.settings.prefix}ally leave\n${client.settings.prefix}ally create {name}\n${client.settings.prefix}ally invest {amount}\n\n--alliance owners--\n${client.settings.prefix}ally description {string}\n${client.settings.prefix}ally disband\n${client.settings.prefix}ally kick {user}\n${client.settings.prefix}ally apps list {#}\n${client.settings.prefix}ally apps accept {name}\n${client.settings.prefix}ally apps deny {name}`
         },
 
         run(message) {
@@ -230,6 +230,45 @@ module.exports.load = client => {
                                 collector.stop()
                             }
 
+                        })
+                    })
+                }
+
+                if(args[0] == 'description'){
+                    client.load_alliance_data(user_res.alliance, ally_res => {
+                        if(ally_res == null) return client.send_error(message, 'You are not in an alliance.')
+                        if(ally_res.owner_id != message.author.id) return client.send_error(message, 'You are not the owner of this alliance.')
+
+                        let c_description = message.content.split(' ').splice(2).join(' ')
+                        if(c_description == '') return client.send_error(message, 'You cant have an empty description.')
+
+                        client.cooldowns.collector.push(message.author.id)
+
+                        let embed = new client.discord.RichEmbed()
+                        .setTitle('Alliance')
+                        .setDescription(`**${message.author.username}**, you are about to set your description to \`${c_description}\`. \nRespond with \`yes\` or \`no\`.`)
+                        .setTimestamp()
+                        .setColor(client.settings.embed_color)
+                        message.reply(embed)
+
+                        setTimeout(() => {
+                            client.cooldowns.collector.splice(client.cooldowns.collector.indexOf(message.author.id), 1)
+                        }, client.settings.collector_timeout * 1000)
+
+                        const collector = new client.discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: client.settings.collector_timeout * 1000 })
+                        collector.on('collect', message => {
+                            if (message.content.toLowerCase() == `yes`) {
+                                ally_res.description = c_description 
+                                client.write_alliance_data(ally_res.name, ally_res)
+                                message.reply('You have successfully changed your alliance description')
+                                client.cooldowns.collector.splice(client.cooldowns.collector.indexOf(message.author.id), 1)
+                                collector.stop()
+                            }
+                            if (message.content.toLowerCase() == `no`) {
+                                client.send_error(message, 'Action cancelled.')
+                                client.cooldowns.collector.splice(client.cooldowns.collector.indexOf(message.author.id), 1)
+                                collector.stop()
+                            }
                         })
                     })
                 }
