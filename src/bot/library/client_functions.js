@@ -32,16 +32,6 @@ module.exports = client => {
         message.channel.send(embed)
     }
 
-    //triggered when word from trigger words json is said or included in message
-    client.message_logger = message => {
-        client.triggers.forEach(word => {
-            if(message.content.toLowerCase().includes(word)) {
-                let output = `TRIGGERED :: ${message.author.username}#${message.author.discriminator} | ${message.member.guild.name} :: ${message.content}`
-                client.log(output)
-            }
-        })
-    }
-
     //pretty logging stuff
     client.log = (string) => console.log(`${client.moment().format('MMMM Do YYYY, h:mm:ss a')} :: ${string}`)
 

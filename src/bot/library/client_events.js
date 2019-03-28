@@ -3,7 +3,6 @@ module.exports = client => {
     //on ever discord message 
     client.on('message', async message => {
         if(message.author.bot) return
-        client.message_logger(message)
         if(!client.message_has_prefix(message)) return
         if(!client.command_exist(message.content.split(' ')[0].replace(client.settings.prefix, ''))) return
         if(client.commands[message.content.split(' ')[0].replace(client.settings.prefix, '')].conf.type == 2){

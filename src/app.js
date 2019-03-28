@@ -4,12 +4,13 @@ let client = new Discord.Client
 client.moment = require('moment')
 client.settings = require('./bot/settings/settings.json')
 client.ships = require('./bot/settings/ships.json')
-client.triggers = require('./bot/settings/trigger_words.json')
 client.discord = Discord
 client.fs = require('fs')
 client.name_generate = require('project-name-generator')
 client.cron = require('cron').CronJob
 client.humanize = require('humanize-duration')
+const Chance = require('chance')
+client.chance = new Chance()
 let DBL = require('dblapi.js')
 
 client.commands = {} 
@@ -17,6 +18,7 @@ client.cooldowns = {}
 client.cooldowns.action = []
 client.cooldowns.collector = []
 client.cooldowns.mining = []
+client.cooldowns.pvp = []
 
 if(client.settings.dev_mode){
     client.settings.token = client.settings.beta_token 

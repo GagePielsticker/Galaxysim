@@ -43,7 +43,7 @@
         "starting_ship_description" : "its meh",
 
         "planet_scan_time" : 15,
-        "pvp_scan_time" : 10,
+        "pvp_scan_time" : 15,
 
         "colony_base_cost" : 20000,
 
@@ -87,6 +87,17 @@
 
         "shop_list_amount" : 6,
 
-        "member_reward" : 10000
+        "member_reward" : 10000,
+
+        "pvp_cooldown" : 120,
+        "pvp_time" : 5,
+        "pvp_win_profit_percent" : 0.2,
+        "pvp_lose_profit_percent" : 0.3,
+
+        "att_upgrade_cost" : 8000,
+        "att_upgrade_amount" : 1,
+
+        "def_upgrade_cost" : 8000,
+        "def_upgrade_amount" : 1
     }
 }
