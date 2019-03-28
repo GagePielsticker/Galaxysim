@@ -4,7 +4,7 @@ module.exports.load = client => {
             'name' : 'Upgrade',
             'type' : 2,
             'description' : 'Upgrade your ship systems.',
-            'usage' : `${client.settings.prefix}upgrade mining\n${client.settings.prefix}upgrade warp\n${client.settings.prefix}upgrade fuel\n${client.settings.prefix}upgrade attack\n${client.settings.prefix}upgrade defence`
+            'usage' : `${client.settings.prefix}upgrade mining\n${client.settings.prefix}upgrade warp\n${client.settings.prefix}upgrade fuel\n${client.settings.prefix}upgrade attack\n${client.settings.prefix}upgrade defense`
         },
 
         run(message) {
@@ -67,10 +67,10 @@ module.exports.load = client => {
                     })
                 }
 
-                if(args[0] == 'defence'){
+                if(args[0] == 'defense'){
                     let price = res.ship.def * client.settings.game.def_upgrade_cost
                     if(res.credits - price < 0) return client.send_error(message, `You aren\'t able to afford this upgrade. This will cost you \`${price}\` credits.`)
-                    vericheck('defence', price)
+                    vericheck('defense', price)
                     client.cooldowns.collector.push(message.author.id)
 
                     setTimeout(() => {
