@@ -70,6 +70,7 @@ module.exports.load = client => {
                 if(args[0] == 'scan'){
                     let price = res.ship.att * client.settings.game.scan_upgrade_cost
                     if(res.credits - price < 0) return client.send_error(message, `You aren\'t able to afford this upgrade. This will cost you \`${price}\` credits.`)
+                    if(res.ship.scanner_strength + client.settings.game.scan_upgrade_amount > res.ship.max_scanner_strength) return client.send_error(message, `Your ship type \`${res.ship.type}\` cant fit any more scan upgrades.`)
                     vericheck('scan', price)
                     client.cooldowns.collector.push(message.author.id)
 
