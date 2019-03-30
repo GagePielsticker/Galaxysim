@@ -98,6 +98,9 @@
         "att_upgrade_amount" : 1,
 
         "def_upgrade_cost" : 8000,
-        "def_upgrade_amount" : 1
+        "def_upgrade_amount" : 1,
+
+        "scan_upgrade_cost" : 5000,
+        "scan_upgrade_amount" : 1
     }
 }

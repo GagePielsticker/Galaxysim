@@ -24,6 +24,7 @@ module.exports.load = client => {
                 embed.addField('Ship Att|Def', `\`${res.ship.att}|${res.ship.def}\``, true)
                 embed.addField('Ship Mining Strength', `\`${res.ship.mining_speed}/${res.ship.max_mining_speed}\``, true)
                 embed.addField('Ship Warp Speed', `\`${res.ship.warp_speed}/${res.ship.max_warp_speed}\``, true)
+                embed.addField('Ship Scan Strength', `\`${res.ship.scanner_strength}/${res.ship.max_scanner_strength}\``, true)
                 embed.addField('Ship Fuel', `\`${res.ship.fuel}/${res.ship.max_fuel}\``, true)
                 embed.setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
                 embed.setTimestamp()

@@ -52,10 +52,8 @@ module.exports.load = client => {
 
                 let embed = new client.discord.RichEmbed()
                 .setTitle(cmd_info.name)
-
                 .addField('Description', `\`\`\`${cmd_info.description}\`\`\``)
                 .addField('Usage', `\`\`\`${cmd_info.usage}\`\`\``)
-    
                 .setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
                 .setTimestamp()
                 .setColor(client.settings.embed_color)
