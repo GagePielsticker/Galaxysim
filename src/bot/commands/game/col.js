@@ -23,6 +23,7 @@ module.exports.load = client => {
                 .setTitle('Colony Lookup')
                 .setDescription(`Here is all your info for colony \`${colony.name}\``)
                 .addField(`Investments`, `\`${colony.investments}\``, true)
+                .addField(`Population`, `\`${colony.population}\``, true)
                 .addField(`Position`, `\`${colony.x_pos}|${colony.y_pos}\``, true)
                 .addField(`Available Resources`, `\`${colony.resources}\``, true)
                 .addField(`Passive Income`, `\`${profit}\` credits`, true)
