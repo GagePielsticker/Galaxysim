@@ -40,7 +40,7 @@ module.exports.load = client => {
                 }
 
                 if(args[0] == 'attack'){
-                    let price = res.ship.att * client.settings.game.att_upgrade_cost
+                    let price = res.ship.scanner_strength * client.settings.game.att_upgrade_cost
                     if(res.credits - price < 0) return client.send_error(message, `You aren\'t able to afford this upgrade. This will cost you \`${price}\` credits.`)
                     vericheck('attack', price)
                     client.cooldowns.collector.push(message.author.id)
