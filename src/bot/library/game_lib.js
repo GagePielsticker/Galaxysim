@@ -2,41 +2,45 @@ module.exports = client => {
     
         /**
          * Creates and registers a new user account in database
-         * @param {string} d_id
+         * @param {string} user
+         * @returns {Promise} if completed or errored
          */
-        client.create_user = d_id => {
-            let x_spawn = Math.floor(Math.random() * (client.settings.game.max_x - client.settings.game.min_x + 1)) + client.settings.game.min_x
-            let y_spawn =  Math.floor(Math.random() * (client.settings.game.max_y - client.settings.game.min_y + 1)) + client.settings.game.min_y
-            client.load_system_data(x_spawn, y_spawn, response => {
-                if(response == null) client.create_system(x_spawn, y_spawn)
+        client.create_user = user => {
+            return new Promise((resolve, reject) => {
+                if(!user) return reject('No user input.')
+                let x_spawn = Math.floor(Math.random() * (client.settings.game.max_x - client.settings.game.min_x + 1)) + client.settings.game.min_x
+                let y_spawn =  Math.floor(Math.random() * (client.settings.game.max_y - client.settings.game.min_y + 1)) + client.settings.game.min_y
+                client.load_system_data(x_spawn, y_spawn, response => {
+                    if(response == null) client.create_system(x_spawn, y_spawn)
+                })
+                let u = {
+                    id : user,
+                    beta_status : false,
+                    x_pos: x_spawn,
+                    y_pos: y_spawn,
+                    credits: client.settings.game.starting_credits,
+                    alliance: client.settings.game.starting_alliance,
+                    ship: {
+                        type: client.settings.game.starting_ship_type,
+                        description: client.settings.game.starting_ship_description,
+                        warp_speed: client.settings.game.starting_ship_warp,
+                        max_warp_speed: client.settings.game.starting_ship_max_warp,
+                        mining_speed: client.settings.game.starting_ship_mining,
+                        max_mining_speed: client.settings.game.starting_ship_max_mining,
+                        scanner_strength: client.settings.game.starting_scanner_strength,
+                        max_scanner_strength: client.settings.game.starting_ship_max_scan,
+                        att: client.settings.game.starting_ship_att,
+                        def: client.settings.game.starting_ship_def,
+                        max_cargo: client.settings.game.starting_max_cargo,
+                        max_fuel: 100,
+                        fuel: 100,
+                        cargo: [],
+                    },
+                    colonies: []
+                }
+                client.write_user_data(user, u)
+                resolve()
             })
-            let u = {
-                id : d_id,
-                beta_status : false,
-                x_pos: x_spawn,
-                y_pos: y_spawn,
-                credits: client.settings.game.starting_credits,
-                alliance: client.settings.game.starting_alliance,
-                ship: {
-                    type: client.settings.game.starting_ship_type,
-                    description: client.settings.game.starting_ship_description,
-                    warp_speed: client.settings.game.starting_ship_warp,
-                    max_warp_speed: client.settings.game.starting_ship_max_warp,
-                    mining_speed: client.settings.game.starting_ship_mining,
-                    max_mining_speed: client.settings.game.starting_ship_max_mining,
-                    scanner_strength: client.settings.game.starting_scanner_strength,
-                    max_scanner_strength: client.settings.game.starting_ship_max_scan,
-                    att: client.settings.game.starting_ship_att,
-                    def: client.settings.game.starting_ship_def,
-                    max_cargo: client.settings.game.starting_max_cargo,
-                    max_fuel: 100,
-                    fuel: 100,
-                    cargo: [],
-                },
-                colonies: []
-            }
-            client.write_user_data(d_id, u)
-            client.log(`Created an account for user ${d_id}`)
         }
     
         /**
@@ -75,32 +79,31 @@ module.exports = client => {
         
     
         /**
-         * Creates an alliance for owner_id (discord id)
-         * @param {String} owner_id
+         * Creates an alliance for user (discord id)
+         * @param {String} user
          * @param {String} name
+         * @returns {Promise} on finish or error
          */
-        client.create_alliance = (owner_id, name) => {
-            let a = {
-                name : name,
-                owner_id : owner_id,
-                description : 'none',
-                credits : 0,
-                tax : 0,
-                trade_routes : [],
-                home_system_x : 0,
-                home_system_y : 0,
-                members : [],
-                join_req : []
-            }
-            client.write_alliance_data(name, a)
-            client.log(`Created an alliance ${name}`)
+        client.create_alliance = (user, name) => {
+            return new Promise((resolve, reject) => {
+                if(!user) return reject('No user input.')
+                if(!name) return reject('No name input.')
+                let a = {
+                    name : name,
+                    owner_id : user,
+                    description : 'none',
+                    credits : 0,
+                    tax : 0,
+                    trade_routes : [],
+                    home_system_x : 0,
+                    home_system_y : 0,
+                    members : [],
+                    join_req : []
+                }
+                client.write_alliance_data(name, a)
+                resolve()
+            })
         }
-
-
-        /**
-         * Every function after this line was part of the major re-write.
-         * Rest of libs will be re-written in same format later on.
-         */
 
         /**
          * Joins user to alliance

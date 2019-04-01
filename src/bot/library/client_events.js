@@ -13,6 +13,7 @@ module.exports = client => {
         } else {
             continue_execution()
         }
+        
         function continue_execution(){
             client.commands[message.content.split(' ')[0].replace(client.settings.prefix, '')].run(message)
             client.log(`${message.author.username}#${message.author.discriminator} executed || ${message.content.split(' ')[0]} || ${message.content.split(' ').splice(1).join(', ')}`)
