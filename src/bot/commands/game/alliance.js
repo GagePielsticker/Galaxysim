@@ -49,7 +49,7 @@ module.exports.load = client => {
                             })
                         }
                     })
-                }
+                } //done
 
                 if(args[0] == 'leave'){
                     client.load_alliance_data(user_res.alliance, ally_res => {
@@ -88,7 +88,7 @@ module.exports.load = client => {
 
                         })
                     })
-                }
+                } //done
 
                 if(args[0] == 'invest'){
                     if(!args[1]) return client.send_error(message, 'Invalid usage.')
@@ -129,7 +129,7 @@ module.exports.load = client => {
                         })
 
                     })
-                }
+                } //done
 
                 if(args[0] == 'create'){
                     if(!args[1]) return client.send_error(message, 'Please enter a name.')
@@ -188,7 +188,7 @@ module.exports.load = client => {
                         client.write_alliance_data(ally_res.name, ally_res)
                         message.reply('User has been removed from alliance.')
                     })
-                }
+                } //done
 
                 if(args[0] == 'disband'){
                     client.load_alliance_data(user_res.alliance, ally_res => {
@@ -232,7 +232,7 @@ module.exports.load = client => {
 
                         })
                     })
-                }
+                } //done
 
                 if(args[0] == 'description'){
                     client.load_alliance_data(user_res.alliance, ally_res => {

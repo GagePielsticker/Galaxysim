@@ -29,6 +29,7 @@ client.dbl = new DBL(client.settings.dbl_token, { webhookPort: 5000 })
 require('./bot/library/client_functions.js')(client)
 require('./bot/library/client_events.js')(client)
 require('./bot/library/db_functions.js')(client)
+require('./bot/library/game_lib.js')(client)
 require('./bot/library/dbl.js')(client)
 
 //Website Dependencies and extended libraries
