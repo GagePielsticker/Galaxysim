@@ -19,6 +19,7 @@ client.cooldowns.action = []
 client.cooldowns.collector = []
 client.cooldowns.mining = []
 client.cooldowns.pvp = []
+client.lib = {}
 
 if(client.settings.dev_mode){
     client.settings.token = client.settings.beta_token 

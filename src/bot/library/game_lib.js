@@ -7,7 +7,9 @@ module.exports = client => {
         client.create_user = d_id => {
             let x_spawn = Math.floor(Math.random() * (client.settings.game.max_x - client.settings.game.min_x + 1)) + client.settings.game.min_x
             let y_spawn =  Math.floor(Math.random() * (client.settings.game.max_y - client.settings.game.min_y + 1)) + client.settings.game.min_y
-            client.create_system(x_spawn, y_spawn)
+            client.load_system_data(x_spawn, y_spawn, response => {
+                if(response == null) client.create_system(x_spawn, y_spawn)
+            })
             let u = {
                 id : d_id,
                 beta_status : false,
@@ -226,9 +228,59 @@ module.exports = client => {
          * @param {String} description
          * @returns {Promise} On success or fail
          */
-        client.description_alliance = (user, alliance_name, description) => {
+        client.description_alliance = (alliance_name, description) => {
             return new Promise((resolve, reject) => {
-                
+                if(!alliance_name) return reject('No alliance input.')
+                if(!description) return reject('No description input.')
+                client.load_alliance_data(alliance_name, response => {
+                    response.description = description
+                    client.write_alliance_data(alliance_name, response)
+                    resolve()
+                })
+            })
+        }
+
+        /**
+         * Moves user to system
+         * @param {String} user
+         * @param {Integer} x_pos
+         * @param {Integer} y_pos
+         * @returns {Promise} On success or fail
+         */
+        client.move_user = (user, x_pos, y_pos) => {
+            return new Promise((resolve, reject) => {
+                if(!user) return reject('User not input.')
+                if(!x_pos) return reject('X_pos not input.')
+                if(!y_pos) return reject('Y_pos not input.')
+                client.load_system_data(x_pos, y_pos, response => {
+                    if(response == null) client.create_system(x_pos, y_pos)
+                })
+                client.load_user_data(user, response => {
+                    if(user == null) return reject('User not in database.')
+                    response.x_pos = x_pos
+                    response.y_pos = y_pos
+                    client.write_user_data(user, response)
+                    resolve()
+                })
+            })
+        }
+
+        /**
+         * Rewards user with credits
+         * @param {String} user
+         * @param {Integer} amount
+         * @returns {Promise} On success or fail
+         */
+        client.reward = (user, amount) => {
+            return new Promise((resolve, reject) => {
+                if(!user) return reject('User not input.')
+                if(!amount) return reject('Amount not input.')
+                client.load_user_data(user, response => {
+                    if(response == null) return reject('User not in database.')
+                    response.credits += amount
+                    client.write_user_data(user, response)
+                    resolve()
+                })
             })
         }
 
@@ -266,7 +318,19 @@ module.exports = client => {
          */
         client.buy_ship = (user, ship) => {
             return new Promise((resolve, reject) => {
-                
+                if(!user) return reject('No user input.')
+                if(!ship) return reject('No ship input.')
+                let bought_ship = false
+                client.ships.forEach(ent => {
+                    if(ent.type == ship) bought_ship = ent
+                })
+                if(!bought_ship) return reject('Ship does not exist.')
+                client.load_user_data(user, response => {
+                    if(response.credits - bought_ship.cost < 0) return reject('User cannot afford ship.')
+                    response.ship = bought_ship
+                    client.write_user_data(user, response)
+                    resolve()
+                })
             })
         }
 
@@ -346,36 +410,11 @@ module.exports = client => {
         }
 
         /**
-         * Rewards user with credits
-         * @param {String} user
-         * @param {Integer} amount
-         * @returns {Promise} On success or fail
-         */
-        client.reward = (user, amount) => {
-            return new Promise((resolve, reject) => {
-                
-            })
-        }
-
-        /**
          * Returns user to closest colony or 20 systems away
          * @param {String} user
          * @returns {Promise} On success or fail
          */
         client.return_user = (user) => {
-            return new Promise((resolve, reject) => {
-                
-            })
-        }
-
-        /**
-         * Warps user to system
-         * @param {String} user
-         * @param {Integer} x_pos
-         * @param {Integer} y_pos
-         * @returns {Promise} On success or fail
-         */
-        client.warp_user = (user, x_pos, y_pos) => {
             return new Promise((resolve, reject) => {
                 
             })
