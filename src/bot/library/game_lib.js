@@ -288,28 +288,59 @@ module.exports = client => {
         }
 
         /**
-         * Accepts user into alliance
-         * @param {String} user
+         * Moves user into alliance
          * @param {String} target
          * @param {String} alliance_name
          * @returns {Promise} On success or fail
          */
-        client.accept_alliance = (user, target, alliance_name) => {
+        client.add_alliance = (target, alliance_name) => {
+            if(!user) return reject('User not input.')
+            if(!amount) return reject('Amount not input.')
             return new Promise((resolve, reject) => {
-                
+                client.load_alliance_data(alliance_name, alliance_response => {
+                    if(alliance_response == null) return reject('Alliance doesnt exist.')
+                    //if they already applied remove their application
+                    if(alliance_response.join_req.includes(target)) {
+                        ally_response.join_req.splice(alliance_response.join_req.indexOf(target), 1)
+                    }
+                    //push them into the members array
+                    ally_response.members.push(target)
+
+                    client.load_user_data(target, user_response => {
+                        //if they are in alliance remove them from it
+                        if(user_response.alliance != null) {
+                            client.leave_alliance(target)
+                            .catch(e => reject(e))
+                        } else {
+                            client.load_alliance_data(user_response.alliance, alliance_response => {
+                                //if they are owner disband alliance
+                                if(alliance_response.owner_id == target) client.disband_alliance(alliance_name)
+                            })
+                        }
+                    })
+                    
+                    //move user into alliance
+                    client.load_user_data(target, user_response => {
+                        user_response.alliance = alliance_name
+                        client.write_user_data(target, user_response)
+                    })
+                    //save data
+                    client.write_alliance_data(alliance_name, alliance_response)
+                    resolve()
+                })
+
             })
         }
 
         /**
          * Denies user from alliance
-         * @param {String} user
          * @param {String} target
          * @param {String} alliance_name
          * @returns {Promise} On success or fail
          */
-        client.deny_alliance = (user, target, alliance_name) => {
+        client.deny_alliance = (target, alliance_name) => {
             return new Promise((resolve, reject) => {
-                
+                rej
             })
         }
 
