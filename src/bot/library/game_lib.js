@@ -117,8 +117,8 @@ module.exports = client => {
                 if(!alliance_name) return reject('No alliance input.')
                 client.load_alliance_data(alliance_name, response => {
                     if(response == null) return reject('Alliance with that name doesn\'t exist.')
-                    if(response.join_req.includes(message.author.id)) return reject('User already applied for alliance.')
-                    response.join_req.push(message.author.id)
+                    if(response.join_req.includes(user)) return reject('User already applied for alliance.')
+                    response.join_req.push(user)
                     client.write_alliance_data(alliance_name, response)
                     resolve()
                 })
@@ -141,7 +141,7 @@ module.exports = client => {
                             client.disband_alliance(user_response.alliance)
                             resolve()
                         } else {
-                            alliance_response.members.splice(alliance_response.members.indexOf(message.author.id), 1)
+                            alliance_response.members.splice(alliance_response.members.indexOf(user), 1)
                             user_response = null
                             client.write_user_data(user, user_response)
                             client.write_alliance_data(user_response.alliance, alliance_response)
@@ -404,7 +404,7 @@ module.exports = client => {
          * @returns {Promise} Array of objects of top users
          */
         client.top_users_by_col = amount => {
-            return new Promise(async (resolve, reject) => {
+            return new Promise((resolve, reject) => {
                 client.load_user_data('*', data => {
                     data.toArray()
                     .then(async r => {
@@ -435,14 +435,24 @@ module.exports = client => {
         /**
          * Mines astroids in system
          * @param {String} user
-         * @param {Integer} x_pos
-         * @param {Integer} y_pos
-         * @param {Integer} amount
          * @returns {Promise} On success the credits generated or fail
          */
-        client.mine_system = (user, x_pos, y_pos, amount) => {
+        client.mine_system = user => {
             return new Promise((resolve, reject) => {
-                
+                if(client.cooldowns.mining.includes(user)) return reject('User still on mining cooldown.')
+                client.load_user_data(user, user_response => {
+                    client.load_system_data(user_response.x_pos, user_response.y_pos, async system_response => {
+                        if(system_response.astroids == 0) return reject('There are no astroids in the system.')
+                        let astroids_mined = user_response.ship.mining_speed * client.settings.game.base_mining_multiplier
+                        if(system_response.astroids - astroids_mined < 0) {system_response.astroids = 0}
+                        else {system_response.astroids -= astroids_mined}
+                        let profits = Math.floor(astroids_mined * client.settings.game.astroid_cost)
+                        user_response.credits += profits
+                        client.write_user_data(user, user_response)
+                        client.write_system_data(user_response.x_pos, user_response.y_pos, system_response)
+                        resolve(profits)
+                    })
+                })
             })
         }
 
