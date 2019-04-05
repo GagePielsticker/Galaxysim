@@ -397,6 +397,7 @@ module.exports = client => {
             })
         }
 
+        
         /**
          * Gets top users as an array
          * @param {Integer} amount
