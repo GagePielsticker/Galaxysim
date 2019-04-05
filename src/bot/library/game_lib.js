@@ -137,11 +137,16 @@ module.exports = client => {
                 client.load_user_data(user, user_response => {
                     if(user_response.alliance = null) return reject('User not in an alliance.')
                     client.load_alliance_data(user_response.alliance, alliance_response => {
-                        alliance_response.members.splice(alliance_response.members.indexOf(message.author.id), 1)
-                        user_response = null
-                        client.write_user_data(user, user_response)
-                        client.write_alliance_data(user_response.alliance, alliance_response)
-                        resolve()
+                        if(alliance_response.owner_id == user) {
+                            client.disband_alliance(user_response.alliance)
+                            resolve()
+                        } else {
+                            alliance_response.members.splice(alliance_response.members.indexOf(message.author.id), 1)
+                            user_response = null
+                            client.write_user_data(user, user_response)
+                            client.write_alliance_data(user_response.alliance, alliance_response)
+                            resolve()
+                        }
                     })
                 })
             })
@@ -288,14 +293,14 @@ module.exports = client => {
         }
 
         /**
-         * Moves user into alliance
+         * Moves user into alliance and removes application
          * @param {String} target
          * @param {String} alliance_name
          * @returns {Promise} On success or fail
          */
         client.add_alliance = (target, alliance_name) => {
             if(!user) return reject('User not input.')
-            if(!amount) return reject('Amount not input.')
+            if(!alliance_name) return reject('Alliance not input.')
             return new Promise((resolve, reject) => {
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doesnt exist.')
@@ -311,36 +316,43 @@ module.exports = client => {
                         if(user_response.alliance != null) {
                             client.leave_alliance(target)
                             .catch(e => reject(e))
-                        } else {
-                            client.load_alliance_data(user_response.alliance, alliance_response => {
-                                //if they are owner disband alliance
-                                if(alliance_response.owner_id == target) client.disband_alliance(alliance_name)
+                            .then(() => {
+                                user_response.alliance = alliance_name
+                                client.write_user_data(target, user_response)
                             })
+                        } else {
+                            user_response.alliance = alliance_name
+                            client.write_user_data(target, user_response)
                         }
                     })
-                    
-                    //move user into alliance
-                    client.load_user_data(target, user_response => {
-                        user_response.alliance = alliance_name
-                        client.write_user_data(target, user_response)
-                    })
+
                     //save data
                     client.write_alliance_data(alliance_name, alliance_response)
                     resolve()
                 })
-
             })
         }
 
         /**
-         * Denies user from alliance
+         * Removes application from alliance
          * @param {String} target
          * @param {String} alliance_name
          * @returns {Promise} On success or fail
          */
         client.deny_alliance = (target, alliance_name) => {
+            if(!user) return reject('User not input.')
+            if(!alliance_name) return reject('Alliance not input.')
             return new Promise((resolve, reject) => {
-                rej
+                client.load_alliance_data(alliance_name, alliance_response => {
+                    if(alliance_response == null) return reject('Alliance doesnt exist.')
+                    //if they already applied remove their application
+                    if(alliance_response.join_req.includes(target)) {
+                        ally_response.join_req.splice(alliance_response.join_req.indexOf(target), 1)
+                    }
+                    //save data
+                    client.write_alliance_data(alliance_name, alliance_response)
+                    resolve()
+                })
             })
         }
 
