@@ -397,15 +397,38 @@ module.exports = client => {
             })
         }
 
-        
+
         /**
-         * Gets top users as an array
+         * Gets top users by colonies as an array
          * @param {Integer} amount
-         * @returns {Promise} Array of top users
+         * @returns {Promise} Array of objects of top users
          */
-        client.top_users = (amount) => {
-            return new Promise((resolve, reject) => {
-                
+        client.top_users_by_col = amount => {
+            return new Promise(async (resolve, reject) => {
+                client.load_user_data('*', data => {
+                    data.toArray()
+                    .then(async r => {
+                        let leaderboard = []
+                        await r.forEach(doc => {
+                            leaderboard.push(`${doc.id}|${doc.colonies.length}`)
+                        })
+                        await leaderboard.sort((a, b) => {
+                            a = a.split('|').splice(1).join('')
+                            b = b.split('|').splice(1).join('')
+                            return b - a
+                        })
+                        leaderboard.length = amount
+                        let output = []
+                        await leaderboard.forEach(ent => {
+                            let a = ent.split('|')
+                            output.push({
+                                id: a[0],
+                                colonies: a[1]
+                            })
+                        })
+                        await resolve(output)
+                    })
+                })
             })
         }
 
