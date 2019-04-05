@@ -16,7 +16,7 @@
     "support_server_url" : "https://discord.gg/yMsvHZx",
     "website_url" : "https://galaxysim.xyz/",
 
-    "embed_color" : 159,
+    "embed_color" : 10156247,
 
     "mongodb_url" : "mongodb://localhost:27017",
     "mongodb_db" : "gsim",
