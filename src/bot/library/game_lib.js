@@ -192,13 +192,8 @@ module.exports = client => {
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doesn\'t exist.')
                     if(!alliance_response.members.includes(target)) return reject('Target not in alliance.')
-                    client.load_user_data(target, target_response => {
-                        target_response.alliance = null
-                        client.write_user_data(target, target_response)
-                        alliance_response.members.splice(alliance_response.members.indexOf(target), 1)
-                        client.write_alliance_data(alliance_name, alliance_response)
-                        resolve()
-                    })
+                    client.leave_alliance(target)
+                    resolve()
                 })
             })
         }
@@ -345,11 +340,8 @@ module.exports = client => {
             return new Promise((resolve, reject) => {
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doesnt exist.')
-                    //if they already applied remove their application
-                    if(alliance_response.join_req.includes(target)) {
-                        ally_response.join_req.splice(alliance_response.join_req.indexOf(target), 1)
-                    }
-                    //save data
+                    if(!alliance_response.join_req.includes(target)) return reject('User has not applied to alliance.')
+                    ally_response.join_req.splice(alliance_response.join_req.indexOf(target), 1)
                     client.write_alliance_data(alliance_name, alliance_response)
                     resolve()
                 })
