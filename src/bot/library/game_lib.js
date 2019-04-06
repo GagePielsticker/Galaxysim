@@ -119,18 +119,18 @@ module.exports = client => {
             return new Promise((resolve, reject) => {
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doen\'t exist')
-                    alliance_response.membersforEach(member => {
+                    alliance_response.members.forEach(member => {
                         client.load_user_data(user_response => {
                             user_response.alliance = null
                             client.write_user_data(member, user_response)
                         })
-                        client.load_user_data(alliance_response.owner_id, user_response => {
-                            user_response.alliance = null
-                            client.write_user_data(alliance_response.owner_id, user_response)
-                        })
-                        client.delete_alliance_data(alliance_name)
-                        resolve()
                     })
+                    client.load_user_data(alliance_response.owner_id, user_response => {
+                        user_response.alliance = null
+                        client.write_user_data(alliance_response.owner_id, user_response)
+                    })
+                    client.delete_alliance_data(alliance_name)
+                    resolve()
                 })
             })
         }

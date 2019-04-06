@@ -22,6 +22,7 @@ module.exports.load = client => {
                         client.cooldowns.collector.splice(client.cooldowns.collector.indexOf(message.author.id), 1)
                     }, client.settings.collector_timeout * 1000)
                     const collector = new client.discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: client.settings.collector_timeout * 1000 })
+                    
                     collector.on('collect', message => {
                         if (message.content.toLowerCase() == `yes`) {
                             message.reply('You have successfully upgraded your ship.')

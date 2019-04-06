@@ -9,7 +9,9 @@ module.exports.load = client => {
 
         run(message) {
             let args = message.content.split(' ').splice(1)
+            
             if(args[0] == 'list'){
+                
                 if(!args[1]) args[1] = 1
                 else args[1] = parseInt(args[1])
                 if(!Number.isInteger(parseInt(args[1]))) return client.send_error(message, 'Invalid page number.') 
@@ -30,7 +32,6 @@ module.exports.load = client => {
                     if(parseInt(args[1]) > page_max) output_array.push('None')
                     message.channel.send(`Here is a list of all available ships to purchase. To learn more use \`${client.settings.prefix}buy show {ship}\`. Page \`(${args[1]}/${page_max})\`\n\`\`\`\n${output_array.join('\n')}\`\`\``)
                 }
-
             } else if(args[0] == 'show') {
                 let obj
                 client.ships.forEach(ship => {
