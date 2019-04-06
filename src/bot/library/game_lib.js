@@ -511,7 +511,14 @@ module.exports = client => {
          */
         client.user_colony = (colony_name, user) => {
             return new Promise((resolve, reject) => {
-                
+                client.load_user_data(user, async response => {
+                    let col = false
+                    await response.colonies.forEach(colony => {
+                        if(colony.name == colony_name) col = colony
+                    })
+                    if(!col) return reject('No colony found.')
+                    resolve(col)
+                })
             })
         }
 }
