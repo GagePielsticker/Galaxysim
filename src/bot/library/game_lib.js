@@ -480,11 +480,34 @@ module.exports = client => {
         /**
          * Returns user to closest colony or 20 systems away
          * @param {String} user
-         * @returns {Promise} On success or fail
+         * @returns {Promise} On success or fail boolean
          */
         client.return_user = (user) => {
             return new Promise((resolve, reject) => {
-                
+                let pos = {
+                    x: null,
+                    y: null
+                }
+                let base_dist = Number.MAX_SAFE_INTEGER
+                client.load_user_data(user, async response => {
+                    await response.colonies.forEach(colony => {
+                        let temp_dist = distance(response.x_pos, response.y_pos, colony.x_pos, colony.y_pos)
+                        if(temp_dist < base_dist) {
+                            dist = temp_dist
+                            pos.x = colony.x_pos
+                            pos.y = colony.y_pos
+                        }
+                    })
+                    if(pos.x == null || pos.y == null) return resolve(false)
+                    response.x_pos = pos.x
+                    response.y_pos = pos.y
+                    client.write_user_data(user, response)
+                    resolve(true)
+
+                })
+                function distance(x1, y1, x2, y2) {
+                    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+                }
             })
         }
 
