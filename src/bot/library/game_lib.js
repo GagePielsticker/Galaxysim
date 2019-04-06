@@ -157,15 +157,22 @@ module.exports = client => {
          * @param {String} user
          * @param {Integer} x_pos
          * @param {Integer} y_pos
+         * @param {Integer} fuel_used
          * @returns {Promise} On success or fail
          */
-        client.move_user = (user, x_pos, y_pos) => {
+        client.move_user = (user, x_pos, y_pos, fuel_used) => {     
             return new Promise((resolve, reject) => {
+                if(x_pos > client.settings.game.max_x || x_pos < client.settings.game.min_x) return reject('Target outside of boundries.')
+                if(y_pos > client.settings.game.max_x || y_pos < client.settings.game.min_x) return reject('Target outside of boundries.')
+                
                 client.load_system_data(x_pos, y_pos, response => {
                     if(response == null) client.create_system(x_pos, y_pos)
                 })
+
                 client.load_user_data(user, response => {
                     if(user == null) return reject('User not in database.')
+                    if(response.ship.fuel - fuel_used < 0) return reject('User does not have enough fuel.')
+                    response.ship.fuel -= fuel_used
                     response.x_pos = x_pos
                     response.y_pos = y_pos
                     client.write_user_data(user, response)
