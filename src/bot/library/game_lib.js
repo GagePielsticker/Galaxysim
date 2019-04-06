@@ -499,7 +499,33 @@ module.exports = client => {
             if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
             if(amount < 0) return reject('Amount is less than 0.')
             return new Promise((resolve, reject) => {
-                
+                client.load_user_data(user, async response => {
+                    let upgrade = ''
+                    switch(type) {
+                        case 'mining' :
+                            upgrade = 'mining_speed'
+                            break
+                        case 'warp' :
+                            upgrade = 'warp_speed'
+                            break
+                        case 'scan' :
+                            upgrade = 'scanner_strength'
+                            break
+                        case 'fuel' :
+                            upgrade = 'max_fuel'
+                            break
+                        case 'attack' :
+                            upgrade = 'att'
+                            break
+                        case 'defense' :
+                            upgrade = 'def'
+                            break
+                    }
+                    if(upgrade == '') return reject('Invalid type.')
+                    response.ship[upgrade] += amount
+                    client.write_user_data(user, response)
+                    resolve()
+                })
             })
         }
 
