@@ -481,27 +481,17 @@ module.exports = client => {
         }
 
         /**
-         * Scans a system
-         * @param {String} user
+         * Get a system
          * @param {Integer} x_pos
          * @param {Integer} y_pos
          * @returns {Promise} On success the system object or fail
          */
-        client.scan_system = (user, x_pos, y_pos) => {
+        client.get_system = (x_pos, y_pos) => {
             return new Promise((resolve, reject) => {
-                
-            })
-        }
-
-        /**
-         * Attacks target
-         * @param {String} user
-         * @param {String} target
-         * @returns {Promise} On success or fail with credits won or loss
-         */
-        client.pvp_attack = (user, target) => {
-            return new Promise((resolve, reject) => {
-                
+                client.load_system_data(x_pos, y_pos, response => {
+                    if(response == null) return reject('System does not exist.')
+                    resolve(response)
+                })
             })
         }
 
