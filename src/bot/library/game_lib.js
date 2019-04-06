@@ -388,12 +388,37 @@ module.exports = client => {
          * Invest money into a planet
          * @param {String} user
          * @param {String} planet_name
-         * @param {String} amount
+         * @param {Integer} amount
          * @returns {Promise} On success or fail
          */
         client.invest_planet = (user, planet_name, amount) => {
             return new Promise((resolve, reject) => {
-                
+                client.load_user_data(user, user_response => {
+                    if(user_response.credits - amount < 0) return reject('User cannot afford this.')
+                    user_response.colonies.forEach(col => {
+                        if(col.name == planet_name) {
+                            
+                            //do investment stuff
+                            col.investments += amount
+                            user_response.credits -= amount
+
+                            //load system
+                            client.load_system_data(col.x_pos, col.y_pos, system_response => {
+                                system_response.planets.forEach(planet => {
+                                    if(planet.name == planet_name) {
+                                        planet.investments += amount
+                                        client.write_system_data(col.x_pos, col.x_pos, system_response)
+                                    }
+                                })
+                            })
+
+                            //save user data
+                            client.write_user_data(user, user_response)
+
+                            resolve()
+                        }
+                    })
+                })
             })
         }
 
@@ -439,7 +464,6 @@ module.exports = client => {
          */
         client.mine_system = user => {
             return new Promise((resolve, reject) => {
-                if(client.cooldowns.mining.includes(user)) return reject('User still on mining cooldown.')
                 client.load_user_data(user, user_response => {
                     client.load_system_data(user_response.x_pos, user_response.y_pos, async system_response => {
                         if(system_response.astroids == 0) return reject('There are no astroids in the system.')
