@@ -8,14 +8,10 @@ module.exports.load = client => {
         },
 
         run(message) {
-            client.load_user_data(message.author.id, async user_res => {
-                let args = message.content.split(' ').splice(1)
-                if(args.length != 1) return client.send_error(message, 'Invalid Usage')
-                let colony = null
-                await user_res.colonies.map(col => {
-                    if(col.name == args[0]) colony = col
-                })
-                if(colony == null) return client.send_error(message, 'You have no colony with that id.')
+            let args = message.content.split(' ').splice(1)
+            if(args.length != 1) return client.send_error(message, 'Invalid Usage')
+            client.user_colony(args[0], message.author.id)
+            .then(colony => {
                 let p1 = colony.population / 3
                 let p2 = p1 * colony.resources
                 let profit = Math.floor(p2 / 30)
@@ -30,8 +26,10 @@ module.exports.load = client => {
                 .setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
                 .setTimestamp()
                 .setColor(client.settings.embed_color)
-                await message.channel.send(embed)
+                message.channel.send(embed)  
             })
+
+            .catch(e => client.send_error(message, e))
         }
     }
 }
