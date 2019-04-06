@@ -266,6 +266,7 @@ module.exports = client => {
                 client.load_user_data(user, response => {
                     if(response.credits - bought_ship.cost < 0) return reject('User cannot afford ship.')
                     response.ship = bought_ship
+                    response.credits -= bought_ship.cost
                     client.write_user_data(user, response)
                     resolve()
                 })

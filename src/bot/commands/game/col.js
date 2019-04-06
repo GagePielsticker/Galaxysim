@@ -28,7 +28,6 @@ module.exports.load = client => {
                 .setColor(client.settings.embed_color)
                 message.channel.send(embed)  
             })
-
             .catch(e => client.send_error(message, e))
         }
     }
