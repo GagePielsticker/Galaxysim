@@ -86,8 +86,6 @@ module.exports = client => {
          */
         client.create_alliance = (user, name) => {
             return new Promise((resolve, reject) => {
-                if(!user) return reject('No user input.')
-                if(!name) return reject('No name input.')
                 let a = {
                     name : name,
                     owner_id : user,
@@ -113,8 +111,6 @@ module.exports = client => {
          */
         client.join_alliance = (user, alliance_name) => {
             return new Promise((resolve, reject) => {
-                if(!user) return reject('No user input.')
-                if(!alliance_name) return reject('No alliance input.')
                 client.load_alliance_data(alliance_name, response => {
                     if(response == null) return reject('Alliance with that name doesn\'t exist.')
                     if(response.join_req.includes(user)) return reject('User already applied for alliance.')
@@ -132,8 +128,6 @@ module.exports = client => {
          */
         client.leave_alliance = (user) => {
             return new Promise((resolve, reject) => {
-                if(!user) return reject('No user input.')
-                if(!alliance_name) return reject('No alliance input.')
                 client.load_user_data(user, user_response => {
                     if(user_response.alliance = null) return reject('User not in an alliance.')
                     client.load_alliance_data(user_response.alliance, alliance_response => {
@@ -160,11 +154,9 @@ module.exports = client => {
          * @returns {Promise} On success or fail
          */
         client.invest_alliance = (user, amount, alliance_name) => {
+            if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
+            if(amount < 0) return reject('Amount is less than 0.')
             return new Promise((resolve, reject) => {
-                if(!user) return reject('No user input.')
-                if(!alliance_name) return reject('No alliance input.')
-                if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
-                if(amount < 0) return reject('Amount is less than 0.')
                 client.load_user_data(user, user_response => {
                     if(user_response.credits - amount < 0) return reject('User can\'t afford this.')
                     client.load_alliance_data(alliance_name, alliance_response => {
@@ -187,8 +179,6 @@ module.exports = client => {
          */
         client.kick_alliance = (alliance_name, target) => {
             return new Promise((resolve, reject) => {
-                if(!alliance_name) return reject('No alliance input.')
-                if(!target) return reject('No target input.')
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doesn\'t exist.')
                     if(!alliance_response.members.includes(target)) return reject('Target not in alliance.')
@@ -205,7 +195,6 @@ module.exports = client => {
          */
         client.disband_alliance = (alliance_name) => {
             return new Promise((resolve, reject) => {
-                if(!alliance_name) return reject('No alliance input.')
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doen\'t exist')
                     alliance_response.membersforEach(member => {
@@ -233,8 +222,6 @@ module.exports = client => {
          */
         client.description_alliance = (alliance_name, description) => {
             return new Promise((resolve, reject) => {
-                if(!alliance_name) return reject('No alliance input.')
-                if(!description) return reject('No description input.')
                 client.load_alliance_data(alliance_name, response => {
                     response.description = description
                     client.write_alliance_data(alliance_name, response)
@@ -252,9 +239,6 @@ module.exports = client => {
          */
         client.move_user = (user, x_pos, y_pos) => {
             return new Promise((resolve, reject) => {
-                if(!user) return reject('User not input.')
-                if(!x_pos) return reject('X_pos not input.')
-                if(!y_pos) return reject('Y_pos not input.')
                 client.load_system_data(x_pos, y_pos, response => {
                     if(response == null) client.create_system(x_pos, y_pos)
                 })
@@ -275,9 +259,9 @@ module.exports = client => {
          * @returns {Promise} On success or fail
          */
         client.reward = (user, amount) => {
+            if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
+            if(amount < 0) return reject('Amount is less than 0.')
             return new Promise((resolve, reject) => {
-                if(!user) return reject('User not input.')
-                if(!amount) return reject('Amount not input.')
                 client.load_user_data(user, response => {
                     if(response == null) return reject('User not in database.')
                     response.credits += amount
@@ -294,8 +278,6 @@ module.exports = client => {
          * @returns {Promise} On success or fail
          */
         client.add_alliance = (target, alliance_name) => {
-            if(!user) return reject('User not input.')
-            if(!alliance_name) return reject('Alliance not input.')
             return new Promise((resolve, reject) => {
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doesnt exist.')
@@ -335,8 +317,6 @@ module.exports = client => {
          * @returns {Promise} On success or fail
          */
         client.deny_alliance = (target, alliance_name) => {
-            if(!user) return reject('User not input.')
-            if(!alliance_name) return reject('Alliance not input.')
             return new Promise((resolve, reject) => {
                 client.load_alliance_data(alliance_name, alliance_response => {
                     if(alliance_response == null) return reject('Alliance doesnt exist.')
@@ -356,8 +336,6 @@ module.exports = client => {
          */
         client.buy_ship = (user, ship) => {
             return new Promise((resolve, reject) => {
-                if(!user) return reject('No user input.')
-                if(!ship) return reject('No ship input.')
                 let bought_ship = false
                 client.ships.forEach(ent => {
                     if(ent.type == ship) bought_ship = ent
@@ -392,6 +370,8 @@ module.exports = client => {
          * @returns {Promise} On success or fail
          */
         client.invest_planet = (user, planet_name, amount) => {
+            if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
+            if(amount < 0) return reject('Amount is less than 0.')
             return new Promise((resolve, reject) => {
                 client.load_user_data(user, user_response => {
                     if(user_response.credits - amount < 0) return reject('User cannot afford this.')
@@ -429,6 +409,8 @@ module.exports = client => {
          * @returns {Promise} Array of objects of top users
          */
         client.top_users_by_col = amount => {
+            if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
+            if(amount < 0) return reject('Amount is less than 0.')
             return new Promise((resolve, reject) => {
                 client.load_user_data('*', data => {
                     data.toArray()
@@ -514,6 +496,8 @@ module.exports = client => {
          * @returns {Promise} On success or fail
          */
         client.upgrade_ship = (type, user, amount) => {
+            if(!Number.isInteger(amount)) return reject('Amount is not valid integer.')
+            if(amount < 0) return reject('Amount is less than 0.')
             return new Promise((resolve, reject) => {
                 
             })
