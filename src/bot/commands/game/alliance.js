@@ -21,6 +21,7 @@ module.exports.load = client => {
                         if(ally_res == null) return client.send_error(message, 'An alliance with that name doesn\'t exist!.')
                         else {
                             if(ally_res.join_req.includes(message.author.id)) return client.send_error(message, 'You are already applied for this alliance.')
+                            if(ally_res.members.includes(message.author.id) || ally_res.owner_id == message.author.id) return client.send_error(message, 'You are in this alliance.')
                             let embed = new client.discord.RichEmbed()
                             .setTitle('Alliance')
                             .setDescription(`**${message.author.username}**, you are about to apply for an alliance, are you sure?\nRespond with \`yes\` or \`no\`.`)
@@ -178,6 +179,7 @@ module.exports.load = client => {
                     client.load_alliance_data(user_res.alliance, ally_res => {
                         if(ally_res == null) return client.send_error(message, 'You are not in an alliance.')
                         if(ally_res.owner_id != message.author.id) return client.send_error(message, 'You are not the owner of this alliance.')
+                        if(ally_res.owner_id == message.author.id) return client.send_error(message, 'You are the owner of this alliance.')
                         if(!ally_res.members.includes(args[1].replace(/[<!@>]/g, ''))) return client.send_error(message, 'User is not in alliance')
 
                         client.load_user_data(args[1].replace(/[<!@>]/g, ''), temp_user => {

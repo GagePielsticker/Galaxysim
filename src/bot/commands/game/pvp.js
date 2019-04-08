@@ -75,6 +75,7 @@ module.exports.load = client => {
                     if(client.cooldowns.pvp.includes(message.author.id)) return client.send_error(message, 'You are currently on pvp cooldown.')
 
                     let target = args[1].replace(/[<!@>]/g, '')
+                    if(target == message.author.id) return client.send_error(message, 'You cannot attack yourself.')
                     client.load_user_data(target, target_res => {
                         if(target_res == null) return client.send_error(message, 'User does not exist in database.')
                         if(target_res.x_pos != user_res.x_pos || target_res.y_pos != user_res.y_pos) return client.send_error(message, 'User not in your system.')

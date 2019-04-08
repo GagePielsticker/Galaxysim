@@ -31,7 +31,7 @@ module.exports.load = client => {
                 .setDescription(`Use \`${client.settings.prefix}help {command}\` to learn more about the command.`)
     
                 .addField('General', `\`\`\`${gen_name_array.join(' ')}\`\`\``)
-                .addField('Game', `\`\`\`${game_name_array.join('\n')}\`\`\`Voting [Here](https://discordbots.org/bot/541536124326117387/vote) grants a 20% boost to industry, for assistance click [Here](https://discord.gg/yMsvHZx).`)
+                .addField('Game', `\`\`\`${game_name_array.join(' \n')}\`\`\`Voting [Here](https://discordbots.org/bot/541536124326117387/vote) grants a 20% boost to industry, for assistance click [Here](https://discord.gg/yMsvHZx).`)
                 .setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
                 .setTimestamp()
                 .setColor(client.settings.embed_color)

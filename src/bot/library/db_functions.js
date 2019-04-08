@@ -124,7 +124,9 @@ module.exports = client => {
                 let x_spawn = Math.floor(Math.random() * (client.settings.game.max_x - client.settings.game.min_x + 1)) + client.settings.game.min_x
                 let y_spawn =  Math.floor(Math.random() * (client.settings.game.max_y - client.settings.game.min_y + 1)) + client.settings.game.min_y
                 client.load_system_data(x_spawn, y_spawn, response => {
-                    if(response == null) client.create_system(x_spawn, y_spawn)
+                    if(response == null) {
+                        client.create_system(x_spawn, y_spawn)
+                    }
                 })
                 let u = {
                     id : user,

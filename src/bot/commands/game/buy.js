@@ -33,10 +33,11 @@ module.exports.load = client => {
                     message.channel.send(`Here is a list of all available ships to purchase. To learn more use \`${client.settings.prefix}buy show {ship}\`. Page \`(${args[1]}/${page_max})\`\n\`\`\`\n${output_array.join('\n')}\`\`\``)
                 }
             } else if(args[0] == 'show') {
-                let obj
+                let obj = false
                 client.ships.forEach(ship => {
                     if(ship.type == args[1]) obj = ship
                 })
+                if(!obj) return client.send_error(message, 'Ship does not exist.')
                 let embed = new client.discord.RichEmbed()
                 .setTitle('Ship')
                 .setDescription(`The \`${obj.type}\` is worth \`${obj.cost.toLocaleString()}\` credits.`)
@@ -53,6 +54,7 @@ module.exports.load = client => {
                 client.ships.forEach(ent => {
                     if(ent.type == args[0]) bought_ship = ent
                 })
+                if(bought_ship == false) return client.send_error(message, 'That ship does not exist.')
                 let embed = new client.discord.RichEmbed()
                 .setTitle('Ship')
                 .setDescription(`**${message.author.username}**, you are about to buy a ship for \`${bought_ship.cost}\`, are you sure?\nRespond with \`yes\` or \`no\`.`)
