@@ -1,0 +1,96 @@
+{
+    "devMode" : true,
+    "developers" : ["174511937151827969"],
+    "gameMasters" : ["174511937151827969"],
+    "botDescription" : "GalaxySim is a galactic conquest simulator letting user explore, interact, and fight over millions of star systems.",
+    "token" : "NTQxNTM2MTI0MzI2MTE3Mzg3.Dzj_2Q.n0h5caMoH6-Zjp7G-mm9nh1NIeQ",
+    "betaToken" : "NTQxNTM2MTI0MzI2MTE3Mzg3.XLGFHg.wWfux-yPyWYWdZ8zV1SKjL_5aI4",
+    "dblToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0MTUzNjEyNDMyNjExNzM4NyIsImJvdCI6dHJ1ZSwiaWF0IjoxNTQ5NzYyNDI4fQ.nLzifROWBB-O1WbFMHoMHRm4LVreRd4h5w9nrudraIo",
+    "prefix" : "g$",
+    "betaPrefix" : "g$$",
+    "activity" : "g$help", 
+    "embedColor" : 10156247,
+    "DBLTimer" : 120,
+
+    "inviteURL" : "https://discordapp.com/oauth2/authorize?&client_id=541536124326117387&scope=bot&permissions=2146958463",
+    "supportServer" : "https://discordapp.com/invite/yMsvHZx",
+    "websiteURL" : "https://galaxysim.xyz",
+
+    "mongodbURL" : "mongodb://localhost:27017",
+
+    "collectorTimeout" : 10,
+
+    "game" : {
+        
+        "startingCredits" : 20000,
+        "startingAlliance" : null,
+        "warpMultiplier" : 50,
+        "shopListPerPage" : 10,
+        "planetScanTime" : 15,
+        "astroidMiningMultiplier" : 5,
+        "miningCooldown" : 15,
+        "oreFuelConversion" : 5,
+        "processingTimePerBlock" : 10,
+        "usersPerPage": 10,
+
+        "upgrade" : {
+            "mining" : 5000,
+            "warp" : 7000,
+            "attack" : 8000,
+            "defense" : 8000,
+            "scanner" : 6000
+        },
+        
+        "colonies" : {
+            "colonyBaseCost" : 20000,
+            "initialPopulation" : 1000,
+            "initialWallet" : 1000,
+            "coloniesPerPage" : 5
+        },
+        
+        "startingShip" : {
+            "type": "Transport",
+            "description": "A small transport ship.",
+            "warpSpeed": 1,
+            "maxWarpSpeed": 1,
+            "miningSpeed": 1,
+            "maxMiningSpeed": 2,
+            "scannerSpeed": 1,
+            "maxScannerSpeed":1,
+            "attack": 1,
+            "maxAttack" : 5,
+            "defense": 1,
+            "maxDefense" : 5,
+            "maxCargo": 100,
+            "fuel": 100,
+            "maxFuel": 100,
+            "cargo": [],
+            "oreStorage" : 0,
+            "oreStorageMax" : 100
+        },
+
+        "map" : {
+            "maxX" : 1000,
+            "minX" : -1000,
+            "maxY" : 1000,
+            "minY" : -100
+        },
+
+        "system" : {
+            "maxPlanets" : 6,
+            "maxAsteroids" : 50000
+        },
+
+        "planet" : {
+            "maxResources" : 60,
+            "maxPopulation" : 200000
+        },
+
+        "alliance" : {
+            "maxDescriptionCharacters" : 300,
+            "creationCost" : 200000,
+            "membersPerPage" : 10,
+            "alliancesPerPage" : 10
+        }
+    }
+}

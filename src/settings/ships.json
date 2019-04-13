@@ -1,0 +1,23 @@
+[
+    {
+        "type": "test",
+        "cost" : 500,
+        "description": "test.",
+        "warpSpeed": 1,
+        "maxWarpSpeed": 3,
+        "miningSpeed": 1,
+        "maxMiningSpeed": 20,
+        "scannerSpeed": 1,
+        "maxScannerSpeed": 6,
+        "attack": 1,
+        "maxAttack" : 5,
+        "defense": 5,
+        "maxDefense" : 5,
+        "maxCargo": 100,
+        "maxFuel": 100,
+        "fuel": 100,
+        "cargo": [],
+        "oreStorage" : 0,
+        "oreStorageMax" : 100
+    }    
+]
