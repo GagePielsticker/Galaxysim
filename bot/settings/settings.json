@@ -32,6 +32,10 @@
         "oreFuelConversion" : 5,
         "processingTimePerBlock" : 10,
         "usersPerPage": 10,
+        "oreConversion" : 30,
+        "quickOreConversion" : 20,
+        "miningBotCost" : 5000,
+        "miningBotProduction" : 6,
 
         "upgrade" : {
             "mining" : 5000,

@@ -1,7 +1,7 @@
 module.exports = client => {
 
     //population growth cron
-    new client.cron('0 */12 * * * *', () => {
+    let a = new client.cron('0 */13 * * * *', () => {
 
         //execute function
         client.game.generateColonyPopulation()
@@ -10,10 +10,18 @@ module.exports = client => {
     
     
     //money growth cron
-    new client.cron('0 */7 * * * *', () => {
+    let b = new client.cron('0 */7 * * * *', () => {
 
         //execute function
         client.game.generateColonyMoney()
+
+    }, null, true, 'America/Los_Angeles')
+
+    //ore from bots
+    let c = new client.cron('0 */3 * * * *', () => {
+
+        //execute function
+        client.game.generateBotMoney()
 
     }, null, true, 'America/Los_Angeles')
 }

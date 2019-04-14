@@ -1,7 +1,7 @@
 [
     {
         "type": "mining-frigate",
-        "cost" : 100000,
+        "cost" : 20000,
         "description": "A small mining ship made to gather asteroids.",
         "warpSpeed": 1,
         "maxWarpSpeed": 2,
@@ -22,8 +22,8 @@
     },
     {
         "type": "mining-barge",
-        "cost" : 300000,
-        "description": "A medium size mining vessle made to gather large amountsasteroids.",
+        "cost" : 100000,
+        "description": "A medium size mining vessle made to gather large amounts of asteroids.",
         "warpSpeed": 1,
         "maxWarpSpeed": 2,
         "miningSpeed": 9,
@@ -43,7 +43,7 @@
     },
     {
         "type": "mining-exhumer",
-        "cost" : 1000000,
+        "cost" : 400000,
         "description": "A large size mining vessle made to gather huge amounts of asteroids.",
         "warpSpeed": 1,
         "maxWarpSpeed": 2,
@@ -64,7 +64,7 @@
     },
     {
         "type": "mining-capital",
-        "cost" : 5000000,
+        "cost" : 80000,
         "description": "A capital ships meant to lead mining operations.",
         "warpSpeed": 1,
         "maxWarpSpeed": 1,

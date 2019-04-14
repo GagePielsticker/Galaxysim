@@ -37,7 +37,7 @@ module.exports.load = client => {
                         .setDescription(`The \`${ship.type}\` is worth \`${ship.cost.toLocaleString()}\` credits.`)
                         .addField('Description', `\`${ship.description}\``)
                         .addField('Attack', `\`${ship.attack}\`/\`${ship.maxAttack}\``, true)
-                        .addField('Attack', `\`${ship.defense}\`/\`${ship.maxDefense}\``, true)
+                        .addField('Defense', `\`${ship.defense}\`/\`${ship.maxDefense}\``, true)
                         .addField('Warp', `\`${ship.warpSpeed}\`/\`${ship.maxWarpSpeed}\``, true)
                         .addField('Mining', `\`${ship.miningSpeed}\`/\`${ship.maxMiningSpeed}\``, true)
                         .addField('Fuel', `\`${ship.fuel}\`/\`${ship.maxFuel}\``, true)

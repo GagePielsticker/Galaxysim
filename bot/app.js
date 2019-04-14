@@ -12,7 +12,7 @@ client.fs = require('fs')
 client.nameGenerator = require('project-name-generator')
 client.cron = require('cron').CronJob
 client.humanize = require('humanize-duration')
-client.dbl = new DBL(client.settings.dbl_token, { webhookPort: 5000 })
+client.dbl = new DBL(client.settings.dblToken, { webhookPort: 5000 })
 
 //devMode state check
 if(client.settings.devMode){

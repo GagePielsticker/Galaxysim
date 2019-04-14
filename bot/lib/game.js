@@ -79,6 +79,7 @@ module.exports = client => {
                     population : 0,
                     wallet : 0,
                     oreStorage : 0,
+                    miningBots : 0,
                     colonizedAt : null
                 })
             }
@@ -89,6 +90,36 @@ module.exports = client => {
                 client.log(`Generated system @ ${xPos}-${yPos} with ${system.planets.length} planets`)
                 resolve()
             })
+        })
+    }
+
+    /**
+     * Add property to all planets
+     * @param {String} prop
+     * @param {ANY} val
+     * @returns {Promise}
+     */
+    client.game.addPlanetProperty = (prop, val) => {
+        return new Promise(async (resolve, reject) => {
+            let galaxy = await client.db.collection('map').find({}).toArray()
+            let users = await client.db.collection('users').find({}).toArray()
+            //loop through each system regenerating the asteroids
+            await galaxy.forEach(async system => {
+                await system.planets.forEach(planet => {
+                    planet[prop] = val
+                    console.log(planet.name)
+                })
+                await client.db.collection('map').update({xPos:system.xPos, yPos:system.yPos}, system)
+            })
+
+            await users.forEach(async user => {
+                await user.colonies.forEach(async colony => {
+                    colony[prop] = val
+                })
+                await client.db.collection('users').update({id:user.id}, user)
+            })
+
+            await resolve()
         })
     }
 
@@ -1364,59 +1395,47 @@ module.exports = client => {
     client.game.generateColonyMoney = () => {
         return new Promise(async (resolve, reject) => {
             
-            //load galaxy
-            let galaxy = await client.db.collection('map').find({}).toArray()
+            //loa users
+            let userBase = await client.db.collection('users').find({}).toArray()
 
-            //for each star system
-            await galaxy.forEach(async system => {
-                
-                //for every planet in the star system
-                await system.planets.forEach(async planet => {
+            //for each user in base
+            await userBase.forEach(async user => {
+                //for each colony
+                await user.colonies.forEach(async colony => {
+                    //calculate ores used
+                    let p1 = colony.population + 100
+                    let convertedOre = Math.floor(p1 / 30)
+
+                    //check if ore storage is empty or will be after next process
+                    if(colony.oreStorage - convertedOre < 0) {
+                        //if ore storage will be empty use rest of ore
+                        convertedOre = colony.oreStorage
+                    }
+
+                    //calculate profit from planet
+                    let profit = convertedOre * client.settings.game.oreConversion
+
+                    //set values
+                    user.credits += profit
+                    colony.oreStorage -= convertedOre
                     
-                    //check if planet is ownd
-                    if(planet.owner != null) {
-
-                        //calculate ores used
-                        let p1 = planet.population + 100
-                        let convertedOre = Math.floor(p1 / 30)
-
-                        //check if ore storage is empty or will be after next process
-                        if(planet.oreStorage - convertedOre < 0) {
-
-                            //if ore storage will be empty use rest of ore
-                            convertedOre = planet.oreStorage
-                        }
-
-                        //calculate profit from planet
-                        let profit = convertedOre * 14
-
-                        //remove ore from system planet
-                        planet.oreStorage -= convertedOre
-
-                        //load owner of planet
-                        await client.db.collection('users').findOne({id:planet.owner})
-                        .then(async profile => {
-
-                            //add profit to profile
-                            profile.credits += profit
-
-                            //remove ore fomr users planet
-                            await profile.colonies.forEach(colony => {
-                                if(colony.name == planet.name) {
-
-                                    //remove ore from colony planet
-                                    colony.oreStorage -= convertedOre
-                                }
-                            })
-                            
-                            //save user data
-                            await client.db.collection('users').update({id:planet.owner}, profile)
+                    //load map
+                    await client.db.collection('map').findOne({xPos: colony.xPos, yPos: colony.yPos})
+                    .then(async system => {
+                        //find and change planet
+                        await system.planets.forEach(planet => {
+                            if(planet.name == colony.name){
+                                planet.oreStorage -= convertedOre
+                            }
                         })
-                    }   
+                        //save map
+                        await client.db.collection('map').update({xPos: colony.xPos, yPos: colony.yPos}, system)
+                    })
+
                 })
 
-                //save system
-                await client.db.collection('map').update({xPos: system.xPos, yPos: system.yPos}, system)
+                //save
+                await client.db.collection('users').update({id: user.id}, user)
             })
             
             //resolve
@@ -1431,52 +1450,44 @@ module.exports = client => {
     client.game.generateColonyPopulation = () => {
         return new Promise(async (resolve, reject) => {
             
-            //load galaxy
-            let galaxy = await client.db.collection('map').find({}).toArray()
+            //loa users
+            let userBase = await client.db.collection('users').find({}).toArray()
 
-            //for each star system
-            await galaxy.forEach(async system => {
-                
-                //for every planet in the star system
-                await system.planets.forEach(async planet => {
+            //for each user in base
+            await userBase.forEach(async user => {
+                //for each colony
+                await user.colonies.forEach(async colony => {
                     
-                    //check if planet is ownd
-                    if(planet.owner != null) {
+                    //calculate population grown
+                    let populationGrowth = Math.floor(colony.wallet / 4 / 4 / 3 * .5)
 
-                       //calculate population grown
-                        let populationGrowth = Math.floor(planet.wallet / 4 / 4 / 3 * .5)
-
-                        //set planet population
-                        if(planet.population + populationGrowth > client.settings.game.planet.maxPopulation){
-                            planet.population = client.settings.game.planet.maxPopulation
-                        } else {
-                            planet.population += populationGrowth
-                        }
-
-                        //load owner of planet
-                        await client.db.collection('users').findOne({id:planet.owner})
-                        .then(async profile => {
-
-                            //add population to planet
-                            await profile.colonies.forEach(colony => {
-                                if(colony.name == planet.name) {
-
-                                    //remove ore from colony planet
-                                    colony.population = planet.population
-                                }
-                            })
-                            
-                            //save user data
-                            await client.db.collection('users').update({id:planet.owner}, profile)
+                    //set planet population
+                    if(colony.population + populationGrowth > client.settings.game.planet.maxPopulation){
+                        colony.population = client.settings.game.planet.maxPopulation
+                    } else {
+                        colony.population += populationGrowth
+                    }
+                    
+                    //load map
+                    await client.db.collection('map').findOne({xPos: colony.xPos, yPos: colony.yPos})
+                    .then(async system => {
+                        //find and change planet
+                        await system.planets.forEach(planet => {
+                            if(planet.name == colony.name){
+                                planet.population = colony.population
+                            }
                         })
-                        
-                    }   
+                        //save map
+                        await client.db.collection('map').update({xPos: colony.xPos, yPos: colony.yPos}, system)
+                    })
+
                 })
 
-                //save system
-                await client.db.collection('map').update({xPos:system.xPos, yPos:system.yPos}, system)
+                //save
+                await client.db.collection('users').update({id: user.id}, user)
             })
-            
+
+            //resolve
             await resolve()
         })
     }
@@ -1696,4 +1707,147 @@ module.exports = client => {
             await resolve(output)
         })
     }
+
+    client.game.sellOre = (user, amount) => {
+        return new Promise(async (resolve, reject) => {
+            //load user profile
+            let profile = await client.db.collection('users').findOne({id: user})
+
+            //load system data
+            let system = await client.db.collection('map').findOne({xPos: profile.xPos, yPos: profile.yPos})
+
+            //if amount is all use all storage
+            if(amount = 'all') amount = profile.ship.oreStorage
+
+            //check if page is integer
+            if(!Number.isInteger(amount) || amount < 0) return reject('Amount invalid.')
+
+            //check if user has enough ores
+            if(profile.ship.oreStorage - amount < 0) return reject('You do not have enough ore to perform this action.')
+
+            let profit = Math.floor(amount * client.settings.game.quickOreConversion)
+
+            //remove ore from ore storage on ship
+            profile.ship.oreStorage -= amount
+            profile.credits += profit
+
+            //save
+            await client.db.collection('users').update({id:user}, profile)
+
+            //resolve
+            await resolve(profit)
+        })
+    }
+
+    /**
+     * Buy mining bot for colony
+     * @param {String} user
+     * @param {String} colony
+     * @param {Integer} amount
+     * @returns {Promise}
+     */
+    client.game.buyMiningBot = (user, colony, amount) => {
+         return new Promise(async (resolve, reject) => {
+             //load user profile
+            let profile = await client.db.collection('users').findOne({id: user})
+
+            //load system data
+            let system = await client.db.collection('map').findOne({xPos: profile.xPos, yPos: profile.yPos})
+
+            //check if page is integer
+            if(!Number.isInteger(amount) || amount < 0) return reject('Amount invalid.')
+
+            //check if colony is in system
+            let a
+            await system.planets.forEach(planet => {
+                if(planet.name == colony) a = planet
+            })
+            if(!a) return reject('Colony not found in system.')
+
+            //check if they own colony
+            if(a.owner != user) return reject('You dont own this colony.')
+
+            //figure out cost
+            let cost = Math.floor(amount * client.settings.game.miningBotCost)
+
+            //check if they can afford
+            if(profile.credits - cost < 0) return reject(`You cannot afford this. This would cost \`${cost}\` credits.`)
+
+            //update system colony
+            await system.planets.forEach(planet => {
+                if(planet.name == colony) {
+                    planet.miningBots += amount
+                }
+            })
+
+            //update user colony
+            await profile.colonies.forEach(planet => {
+                if(planet.name == colony) {
+                    planet.miningBots += amount
+                }
+            })
+
+            //remove credits
+            profile.credits -= cost
+
+            //save
+            await client.db.collection('users').update({id:user}, profile)
+            await client.db.collection('map').update({xPos: system.xPos, yPos: system.yPos}, system)
+            
+            //resolve
+            await resolve()
+         })
+    }
+
+    /**
+     * Generates colony passive profits and removes ores from colony (rework to loop over user instead of galaxy)
+     * @returns {Promise}
+     */
+    client.game.generateBotOre = () => {
+        return new Promise(async (resolve, reject) => {
+            
+            //load galaxy
+            let galaxy = await client.db.collection('map').find({}).toArray()
+
+            //for each star system
+            await galaxy.forEach(async system => {
+                
+                //for every planet in the star system
+                await system.planets.forEach(async planet => {
+                    
+                    //check if planet is ownd
+                    if(planet.owner != null) {
+
+                        let generateOre = planet.miningBots * client.settings.game.miningBotProduction
+
+                        planet.oreStorage += generateOre
+
+                        //load owner of planet
+                        await client.db.collection('users').findOne({id:planet.owner})
+                        .then(async profile => {
+
+                            //find the colony
+                            await profile.colonies.forEach(colony => {
+                                if(colony.name == planet.name) {
+
+                                    //add ore to colony planet
+                                    colony.oreStorage += generateOre
+                                }
+                            })
+                            
+                            //save user data
+                            await client.db.collection('users').update({id:planet.owner}, profile)
+                        })
+                    }   
+                })
+
+                //save system
+                await client.db.collection('map').update({xPos: system.xPos, yPos: system.yPos}, system)
+            })
+            
+            //resolve
+            await resolve()
+        })
+    }
+
 }
