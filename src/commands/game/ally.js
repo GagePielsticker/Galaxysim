@@ -3,7 +3,7 @@ module.exports.load = client => {
         settings : {
             type : 'game',
             description : 'Contains all alliance based commands.',
-            usage : `${client.settings.prefix}ally create {name}\n${client.settings.prefix}ally leaven\n${client.settings.prefix}ally stats\n${client.settings.prefix}ally members\n${client.settings.prefix}ally invest {amount}\n----Alliance Owners----\n${client.settings.prefix}ally disband\n${client.settings.prefix}ally kick {user}\n${client.settings.prefix}ally set description {string}\n${client.settings.prefix}ally set tax {%}\n${client.settings.prefix}ally set home {x} {y}`
+            usage : `----Alliance Members----\n${client.settings.prefix}ally create {name}\n${client.settings.prefix}ally join {name}\n${client.settings.prefix}ally leave\n${client.settings.prefix}ally stats\n${client.settings.prefix}ally members\n${client.settings.prefix}ally invest {amount}\n----Alliance Owners----\n${client.settings.prefix}ally apps list {#}\n${client.settings.prefix}ally apps accept {#}\n${client.settings.prefix}ally apps deny {#}\n${client.settings.prefix}ally disband\n${client.settings.prefix}ally kick {user}\n${client.settings.prefix}ally set description {string}\n${client.settings.prefix}ally set tax {%}\n${client.settings.prefix}ally set home {x} {y}`
         },
 
         async run(message) {
@@ -151,6 +151,48 @@ module.exports.load = client => {
                     message.channel.send(embed)
                 })
                 .catch(e => client.sendError(message, e))
+            }
+
+            //join alliance
+            if(args[0] == 'join'){
+                let allianceName = args.splice(1).join(' ')
+                client.game.applyToAlliance(message.author.id, allianceName)
+                .then(users => {
+                    message.channel.send(`Applied to alliance.`)
+                })
+                .catch(e => client.sendError(message, e))
+            }
+
+            //ally applications
+            if(args[0] == 'apps'){
+                
+                //list
+                if(args[1] == 'list'){
+                    if(!args[2]) args[2] = 1
+                    client.game.getAllianceApplications(message.author.id, parseInt(args[2]))
+                    .then(users => {
+                        message.channel.send(`Applications page \`${args[2]}\` \`\`\`${users.join('\n')}\`\`\``)
+                    })
+                    .catch(e => client.sendError(message, e))
+                }
+
+                //accpet
+                if(args[1] == 'accept'){
+                    client.game.acceptAllianceApplications(message.author.id, parseInt(args[2]))
+                    .then(() => {
+                        message.reply('Accepted user into alliance.')
+                    })
+                    .catch(e => client.sendError(message, e))
+                }
+
+                //deny
+                if(args[1] == 'deny'){
+                    client.game.denyAllianceApplications(message.author.id, parseInt(args[2]))
+                    .then(() => {
+                        message.reply('Denied user from alliance.')
+                    })
+                    .catch(e => client.sendError(message, e))
+                }
             }
 
             //settings stuff

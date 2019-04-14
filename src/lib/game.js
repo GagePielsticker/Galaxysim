@@ -473,8 +473,8 @@ module.exports = client => {
             //get the members requested
             for(let j = client.settings.game.alliance.membersPerPage * page - client.settings.game.alliance.membersPerPage; j <= client.settings.game.alliance.membersPerPage * page - 1; j++){
                 if(alliance.members[j]) {
-                    let u = client.users.fetch(alliance.members[j])
-                    output.push(`${u.username}#${u.discriminator}`)
+                    let u = await client.users.fetch(alliance.members[j])
+                    await output.push(`${u.username}#${u.discriminator}`)
                 }
             }
 
@@ -1477,6 +1477,195 @@ module.exports = client => {
                 await client.db.collection('map').update({xPos:system.xPos, yPos:system.yPos}, system)
             })
             
+            await resolve()
+        })
+    }
+
+    /**
+     * Fetch alliance join request
+     * @param {String} user
+     * @param {Integer} page
+     * @return {Promise}
+     */
+    client.game.getAllianceApplications = (user, page) => {
+        return new Promise(async (resolve, reject) => {
+            //check if investment is integer
+            if(!Number.isInteger(page) || page < 0) return reject('Page invalid.')
+
+            //get all alliances
+            let profile = await client.db.collection('users').findOne({id:user})
+
+            //check if user is in alliance
+            if(profile.alliance == null) return reject('User is not in an alliance.')
+
+            //load alliance profile
+            let alliance = await client.db.collection('alliances').findOne({name:profile.alliance})
+
+            //check if alliance exist
+            if(alliance == null) return reject('Alliance doesnt exist.')
+
+            //check if user is alliance owner
+            if(alliance.owner != user) return reject('User does not own the alliance.')
+
+            //create empty output array
+            let output = []
+
+            //get the members requested
+            for(let j = client.settings.game.alliance.membersPerPage * page - client.settings.game.alliance.membersPerPage; j <= client.settings.game.alliance.membersPerPage * page - 1; j++){
+                if(alliance.joinRequest[j]) {
+                    let u = await client.users.fetch(alliance.joinRequest[j])
+                    output.push(`${j}.) ${u.username}#${u.discriminator}`)
+                }
+            }
+
+            //check if users on page
+            if(output.length == 0) return reject('No users on that page.')
+
+            //resolve
+            await resolve(output)
+        })
+    }
+
+    /**
+     * Accept a user into the appliance
+     * @param {String} user
+     * @param {Integer} index
+     * @returns {Promise}
+     */
+    client.game.acceptAllianceApplications = (user, index) => {
+        return new Promise(async (resolve, reject) => {
+            //check if index is integer
+            if(!Number.isInteger(index) || index < 0) return reject('Page invalid.')
+
+            //get all alliances
+            let profile = await client.db.collection('users').findOne({id:user})
+
+            //check if user is in alliance
+            if(profile.alliance == null) return reject('Executor is not in an alliance.')
+
+            //load alliance profile
+            let alliance = await client.db.collection('alliances').findOne({name:profile.alliance})
+
+            //check if alliance exist
+            if(alliance == null) return reject('Alliance doesnt exist.')
+
+            //check if user is alliance owner
+            if(alliance.owner != user) return reject('User does not own the alliance.')
+            
+            //check if user is in position
+            if(!alliance.joinRequest[index]) return reject('No user in that position.')
+
+            //get the target
+            let target = await client.users.fetch(alliance.joinRequest[index])
+
+            //fetch target profile and add to alliance
+            let targetProfile = await client.db.collection('users').findOne({id:target.id})
+
+            //check if target is in alliance
+            if(targetProfile.alliance != null) {
+                await delete alliance.joinRequest[index]
+                await client.db.collection('alliances').update({name:alliance.name}, alliance)
+                await reject('User is in an alliance')
+                return
+            }
+
+            //let user know they were accepted
+            target.send(`You have been accepted into \`${alliance.name}\`.`)
+
+            //add them into alliance
+            targetProfile.alliance = alliance.name
+            
+            //push them into members
+            await alliance.members.push(alliance.joinRequest[index])
+
+            //take user out of alliance
+            await delete alliance.joinRequest[index]
+
+            //save alliance
+            await client.db.collection('alliances').update({name:alliance.name}, alliance)
+
+            //save target
+            await client.db.collection('users').update({id:target.id}, targetProfile)
+
+            //resolve
+            await resolve()
+        })
+    }
+
+    /**
+     * Deny user from alliance
+     * @param {String} user
+     * @param {Integer} index
+     * @returns {Promise}
+     */
+    client.game.denyAllianceApplications = (user, index) => {
+        return new Promise(async (resolve, reject) => {
+            //check if index is integer
+            if(!Number.isInteger(index) || index < 0) return reject('Page invalid.')
+
+            //get all alliances
+            let profile = await client.db.collection('users').findOne({id:user})
+
+            //check if user is in alliance
+            if(profile.alliance == null) return reject('User is not in an alliance.')
+
+            //load alliance profile
+            let alliance = await client.db.collection('alliances').findOne({name:profile.alliance})
+
+            //check if alliance exist
+            if(alliance == null) return reject('Alliance doesnt exist.')
+
+            //check if user is alliance owner
+            if(alliance.owner != user) return reject('User does not own the alliance.')
+            
+            //check if user is in position
+            if(!alliance.joinRequest[index]) return reject('No user in that position.')
+
+            //get the target
+            let target = await client.users.fetch(alliance.joinRequest[index])
+
+            //let user know they were accepted
+            target.send(`You have been denied from \`${alliance.name}\`.`)
+
+            //take user out of alliance
+            await delete alliance.joinRequest[index]
+
+            //save alliance
+            await client.db.collection('alliances').update({name:alliance.name}, alliance)
+
+            //resolve
+            await resolve()
+        })
+    }
+
+    /**
+     * Apply for an alliance
+     * @param {String} user
+     * @param {String} allianceName
+     * @returns {Promise}
+     */
+    client.game.applyToAlliance = (user, allianceName) => {
+        return new Promise(async (resolve, reject) => {
+
+            //get user
+            let profile = await client.db.collection('users').findOne({id:user})
+
+            //check if user is in alliance
+            if(profile.alliance != null) return reject('User is in an alliance. To join a new one, they must leave.')
+
+            //get alliance profile
+            let alliance = await client.db.collection('alliances').findOne({name:allianceName})
+
+            //check if alliance exist
+            if(alliance == null) return reject('That alliance does not exist.')
+            
+            //if alliance exist push user to members
+            await alliance.joinRequest.push(user)
+
+            //save alliance
+            await client.db.collection('alliances').update({name:alliance.name}, alliance)
+
+            //resolve
             await resolve()
         })
     }
