@@ -18,7 +18,7 @@ module.exports.load = client => {
                     .then(array => {
                         let embed = new client.discord.MessageEmbed()
                         embed.setTitle('Ships')
-                        embed.setDescription(`All ships available, page \`${args[1]}\`.\n\`\`\`${array.join('\n')}\`\`\`To see more use ${client.settings.prefix}buy show {ship}`)
+                        embed.setDescription(`All ships available, page \`${args[1]}\`.\n\`\`\`${array.join(' \n')}\`\`\`To see more use ${client.settings.prefix}buy show {ship}`)
                         embed.setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
                         embed.setTimestamp()
                         embed.setColor(client.settings.embedColor)
@@ -41,7 +41,7 @@ module.exports.load = client => {
                         .addField('Warp', `\`${ship.warpSpeed}\`/\`${ship.maxWarpSpeed}\``, true)
                         .addField('Mining', `\`${ship.miningSpeed}\`/\`${ship.maxMiningSpeed}\``, true)
                         .addField('Fuel', `\`${ship.fuel}\`/\`${ship.maxFuel}\``, true)
-                        .addField('Ore Storage', `\`${ship.oreStorage}\`/${ship.oreStorageMax}`, true)
+                        .addField('Ore Storage', `\`${ship.oreStorage}\`/\`${ship.oreStorageMax}\``, true)
                         .addField('Cargo', `\`${ship.cargo.length}\`/\`${ship.maxCargo}\``, true)
                         .setTimestamp()
                         .setColor(client.settings.embedColor)

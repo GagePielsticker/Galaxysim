@@ -3,7 +3,7 @@ module.exports.load = client => {
         settings : {
             type : 'game',
             description : 'Deposit ore into a colony to be processed into credits.',
-            usage : `${client.settings.prefix}deposit ore {#}`
+            usage : `${client.settings.prefix}deposit ore {colony} {#}`
         },
 
         async run(message) {
