@@ -1669,4 +1669,31 @@ module.exports = client => {
             await resolve()
         })
     }
+
+    /**
+     * Get a users specific colony
+     * @param {String} user
+     * @param {String} name
+     * @returns {Promise}
+     */
+    client.game.getColony = (user, colonyName) => {
+        return new Promise(async (resolve, reject) => {
+            //get user
+            let profile = await client.db.collection('users').findOne({id:user})
+
+            //set empty output
+            let output
+
+            //find colony
+            await profile.colonies.forEach(colony => {
+                if(colony.name == colonyName) output = colony
+            })
+
+            //if colony doesnt exist
+            if(!output) return reject('Colony not found')
+
+            //resolve
+            await resolve(output)
+        })
+    }
 }
