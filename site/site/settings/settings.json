@@ -1,0 +1,7 @@
+{
+    "callback" : "https://galaxysim.xyz/auth/callback",
+    "beta_callback" : "http://localhost/auth/callback",
+    "app_client_id" : "541536124326117387",
+    "app_client_secret" : "tnxidjfyp5tLvbEqzDoXMD8iKyIPi2Xh",
+    "app_scopes" : ["identify"]
+}
