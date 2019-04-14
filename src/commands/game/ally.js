@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['ally'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Contains all alliance based commands.',
+            usage : `${client.settings.prefix}ally create {name}\n${client.settings.prefix}ally leaven\n${client.settings.prefix}ally stats\n${client.settings.prefix}ally members\n${client.settings.prefix}ally invest {amount}\n----Alliance Owners----\n${client.settings.prefix}ally disband\n${client.settings.prefix}ally kick {user}\n${client.settings.prefix}ally set description {string}\n${client.settings.prefix}ally set tax {%}\n${client.settings.prefix}ally set home {x} {y}`
         },
 
         async run(message) {

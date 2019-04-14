@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['invest'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Invest in a colony to help it grow.',
+            usage : `${client.settings.prefix}invest {colony} {#}`
         },
 
         async run(message) {

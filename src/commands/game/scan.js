@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['scan'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Scan system for planets and asteroids.',
+            usage : `${client.settings.prefix}scan`
         },
 
         async run(message) {

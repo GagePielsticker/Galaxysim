@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['give'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Give another user credits.',
+            usage : `${client.settings.prefix}give {user} {#}`
         },
 
         async run(message) {

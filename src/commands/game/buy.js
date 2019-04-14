@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['buy'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'All commands related to ship purchasing.',
+            usage : `${client.settings.prefix}buy list {#}\n${client.settings.prefix}buy show {ship}\n${client.settings.prefix}buy {ship}`
         },
 
         async run(message) {

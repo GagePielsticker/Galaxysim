@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['deposit'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Deposit ore into a colony to be processed into credits.',
+            usage : `${client.settings.prefix}deposit ore {#}`
         },
 
         async run(message) {

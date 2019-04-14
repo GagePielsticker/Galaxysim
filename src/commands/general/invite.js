@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['invite'] = {
         settings : {
-            type : 'general'
+            type : 'general',
+            description : 'Get invite url for bot.',
+            usage : `${client.settings.prefix}invite`
         },
 
         async run(message) {

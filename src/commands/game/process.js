@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['process'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Process ore into fuel on ship.',
+            usage : `${client.settings.prefix}process {#}`
         },
 
         async run(message) {

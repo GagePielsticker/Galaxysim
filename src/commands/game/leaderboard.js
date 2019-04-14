@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['leaderboard'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'See a leaderboards of the game.',
+            usage : `${client.settings.prefix}leaderboard user credits {#}\n${client.settings.prefix}leaderboard user colonies {#}\n${client.settings.prefix}leaderboard alliance credits {#}\n${client.settings.prefix}leaderboard alliance members {#}`
         },
 
         async run(message) {

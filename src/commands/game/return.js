@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['return'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Return to your closest alliance.',
+            usage : `${client.settings.prefix}return`
         },
 
         async run(message) {

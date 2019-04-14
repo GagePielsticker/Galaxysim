@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['upgrade'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Upgrade your ships systems.',
+            usage : `${client.settings.prefix}upgrade mining {#}\n${client.settings.prefix}upgrade warp {#}\n${client.settings.prefix}upgrade scan\n${client.settings.prefix}upgrade attack {#}\n${client.settings.prefix}upgrade defense {#}`
         },
 
         async run(message) {

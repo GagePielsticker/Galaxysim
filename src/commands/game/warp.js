@@ -1,7 +1,9 @@
 module.exports.load = client => {
     client.commands['warp'] = {
         settings : {
-            type : 'game'
+            type : 'game',
+            description : 'Warp to a new location.',
+            usage : `${client.settings.prefix}warp {x} {y}`
         },
 
         async run(message) {
