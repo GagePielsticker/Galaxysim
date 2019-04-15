@@ -37,6 +37,7 @@ module.exports = client => {
                 credits: client.settings.game.startingCredits,
                 alliance: client.settings.game.startingAlliance,
                 ship: client.settings.game.startingShip,
+                bounty: client.settings.game.startingBounty,
                 colonies: []
             }, {upsert:true})
             .then(async () => {
@@ -1229,7 +1230,7 @@ module.exports = client => {
     client.game.getUserLeaderboard = (page, type) => {
         return new Promise(async (resolve, reject) => {
             //check if correct type
-            if(type != 'colonies' && type != 'credits') return reject('Invalid leaderboard type.')
+            if(type != 'colonies' && type != 'credits' && type != 'bounty') return reject('Invalid leaderboard type.')
 
             //check if investment is integer
             if(!Number.isInteger(page) || page < 0) return reject('Page invalid.')
@@ -1273,6 +1274,25 @@ module.exports = client => {
                         await client.users.fetch(users[j].id)
                         .then(u => {
                             output.push(`${j}.) ${u.username}#${u.discriminator} - ${users[j].colonies.length}`)
+                        })
+                    }
+                }
+            }
+
+            //sort array by bounty
+            if(type == 'bounty') {
+                await users.sort((a, b) => {
+                    a = a.bounty
+                    b = b.bounty
+                    return b - a
+                })
+
+                //setup output array with data
+                for(let j = client.settings.game.usersPerPage * page - client.settings.game.usersPerPage; j <= client.settings.game.usersPerPage * page - 1; j++){
+                    if(users[j]){
+                        await client.users.fetch(users[j].id)
+                        .then(u => {
+                            output.push(`${j}.) ${u.username}#${u.discriminator} - ${users[j].bounty}`)
                         })
                     }
                 }
@@ -1844,6 +1864,47 @@ module.exports = client => {
             
             //resolve
             await resolve()
+        })
+    }
+
+    /**
+     * Add bounty on target
+     * @param {String} user
+     * @param {String} target
+     * @param {Integer} amount
+     */
+    client.game.addBounty = (user, target, amount) => {
+        return new Promise(async (resolve, reject) => {
+            //load user profile
+           let profile = await client.db.collection('users').findOne({id: user})
+
+           //check if target is self
+           if(target == user) return reject('You cannot set a bounty on yourself.')
+
+           //load target profile
+           let targetProfile = await client.db.collection('users').findOne({id: target})
+
+           //check if exist in db
+           if(targetProfile == null) return reject('Target not found in database.')
+
+           //check if page is integer
+           if(!Number.isInteger(amount) || amount < 0) return reject('Amount invalid.')
+
+           //check if user can afford bounty set
+           if(profile.credits - amount < 0) return reject('User cannot afford this.')
+
+           //remove credits from user
+           profile.credits -= amount
+
+           //set bounty
+           targetProfile.bounty += amount
+
+           //save data
+           client.db.collection('users').update({id: profile.id}, {$set:{credits:profile.credits}})
+           client.db.collection('users').update({id: targetProfile.id}, {$set:{bounty:targetProfile.bounty}})
+
+           //resolve
+           resolve()
         })
     }
 

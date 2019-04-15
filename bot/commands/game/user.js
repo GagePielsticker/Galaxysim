@@ -13,6 +13,7 @@ module.exports.load = client => {
             embed.setDescription('This page contains general user information for your player.')
             embed.addField('Position X|Y', `\`${user.xPos} | ${user.yPos}\``, true)
             embed.addField('Credits', `\`${user.credits.toLocaleString()}\``, true)
+            embed.addField('Bounty', `\`${user.bounty}\``, true)
             if(user.alliance == null) embed.addField('Alliance', `\`none\``, true)
             else embed.addField('Alliance', `\`${user.alliance}\``, true)
             embed.addField('Colonies', `\`${user.colonies.length}\``, true)

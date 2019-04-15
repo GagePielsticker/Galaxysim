@@ -36,6 +36,7 @@
         "quickOreConversion" : 20,
         "miningBotCost" : 5000,
         "miningBotProduction" : 6,
+        "startingBounty" : 0,
 
         "upgrade" : {
             "mining" : 5000,
