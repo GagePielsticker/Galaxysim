@@ -43,7 +43,7 @@
     },
     {
         "type": "mining-exhumer",
-        "cost" : 400000,
+        "cost" : 1000000,
         "description": "A large size mining vessle made to gather huge amounts of asteroids.",
         "warpSpeed": 1,
         "maxWarpSpeed": 2,
@@ -64,7 +64,7 @@
     },
     {
         "type": "mining-capital",
-        "cost" : 80000,
+        "cost" : 4000000,
         "description": "A capital ships meant to lead mining operations.",
         "warpSpeed": 1,
         "maxWarpSpeed": 1,

@@ -14,7 +14,6 @@ module.exports.load = client => {
             let args = message.content.split(' ').splice(1)
 
             if(args[0] == 'ore'){
-                if(!args[2]) args[2] = 'all'
                 client.sendCheck(message, `You are about to deposit \`${args[2]}\` ore into the \`${args[1]}\`.`)
                 const collector = new client.discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: client.settings.collectorTimeout * 1000 })
                 collector.on('collect', message => {

@@ -21,7 +21,7 @@ module.exports = client => {
     let c = new client.cron('0 */3 * * * *', () => {
 
         //execute function
-        client.game.generateBotMoney()
+        client.game.generateBotOre()
 
     }, null, true, 'America/Los_Angeles')
 }

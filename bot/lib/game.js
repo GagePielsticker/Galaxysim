@@ -950,9 +950,6 @@ module.exports = client => {
             //load system data
             let system = await client.db.collection('map').findOne({xPos: profile.xPos, yPos: profile.yPos})
 
-            //if amount is all use all storage
-            if(amount = 'all') amount = profile.ship.oreStorage
-
             //check if page is integer
             if(!Number.isInteger(amount) || amount < 0) return reject('Amount invalid.')
 
