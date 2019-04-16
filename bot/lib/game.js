@@ -1817,7 +1817,7 @@ module.exports = client => {
     }
 
     /**
-     * Generates colony passive profits and removes ores from colony (rework to loop over user instead of galaxy)
+     * Generates colony passive profits and removes ores from colony and system (rework to loop over user instead of galaxy)
      * @returns {Promise}
      */
     client.game.generateBotOre = () => {
@@ -1835,7 +1835,15 @@ module.exports = client => {
                     //check if planet is ownd
                     if(planet.owner != null) {
 
-                        let generateOre = planet.miningBots * client.settings.game.miningBotProduction
+                        let generateOre = Math.floor(parseInt(planet.miningBots * client.settings.game.miningBotProduction))
+
+                        //check if system can handle it if they cant remove rest of ore
+                        if(system.asteroids - generateOre < 0) {
+                            generateOre = system.asteroids
+                            system.asteroids = 0
+                        } else {
+                            system.asteroids -= generateOre
+                        }
 
                         planet.oreStorage += generateOre
 
