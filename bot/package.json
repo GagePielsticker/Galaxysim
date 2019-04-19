@@ -16,6 +16,7 @@
     "humanize-duration": "^3.18.0",
     "moment": "^2.24.0",
     "mongodb": "^3.2.3",
+    "patreon": "^0.4.1",
     "project-name-generator": "^2.1.6"
   }
 }

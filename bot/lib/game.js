@@ -37,6 +37,9 @@ module.exports = client => {
                 credits: client.settings.game.startingCredits,
                 alliance: client.settings.game.startingAlliance,
                 ship: client.settings.game.startingShip,
+                contributer: false,
+                spaceExplorer: false,
+                cosmonaut:false,
                 bounty: client.settings.game.startingBounty,
                 colonies: []
             }, {upsert:true})

@@ -11,6 +11,15 @@ module.exports.load = client => {
             let embed = await new client.discord.MessageEmbed()
             embed.setTitle('User')
             embed.setDescription('This page contains general user information for your player.')
+            if(user.contributer){
+                embed.setThumbnail('https://i.imgur.com/JhmbPcN.png')
+            }
+            if(user.spaceExplorer){
+                embed.setThumbnail('https://i.imgur.com/Lp7mnf7.png')
+            }
+            if(user.cosmonaut){
+                embed.setThumbnail('https://i.imgur.com/JXI3mQ6.png')
+            }
             embed.addField('Position X|Y', `\`${user.xPos} | ${user.yPos}\``, true)
             embed.addField('Credits', `\`${user.credits.toLocaleString()}\``, true)
             embed.addField('Bounty', `\`${user.bounty}\``, true)
