@@ -13,7 +13,7 @@ module.exports.load = client => {
             //get profile, current system, and time taken to scan
             let system = await client.game.getCurrentSystem(message.author.id)
             let profile = await client.db.collection('users').findOne({id:message.author.id})
-            let scanTime = Math.floor(system.planets.length * client.settings.game.planetScanTime / profile.ship.scannerSpeed / 4)
+            let scanTime = Math.floor(system.planets.length * client.settings.game.planetScanTime / profile.ship.scannerSpeed * 2)
 
             client.sendCheck(message, `You are about to scan the system which will take \`${client.humanize(scanTime * 1000)}\``)
             const collector = new client.discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: client.settings.collectorTimeout * 1000 })
