@@ -1,6 +1,6 @@
 # Galaxysim
 A text based space exploration game for discord.
-Currently in 500 guilds
-with 250+ active players
+- in 500+ communities
+- 250 active registered players
 
-needs mongodb running 
+Needs mongodb running 
