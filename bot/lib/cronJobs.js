@@ -26,7 +26,7 @@ module.exports = client => {
     }, null, true, 'America/Los_Angeles')
 
     //daily asteroid regen
-    let d = new client.cron('0 0 0 * * *', () => {
+    let d = new client.cron('0 0 4 * * *', () => {
 
         //execute function
         client.game.regenerateAsteroids()

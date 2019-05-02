@@ -1416,50 +1416,51 @@ module.exports = client => {
         return new Promise(async (resolve, reject) => {
             
             //loa users
-            let userBase = await client.db.collection('users').find({}).toArray()
+            client.db.collection('users').find({}).toArray()
+            .then(async userBase => {
+                //for each user in base
+                await userBase.forEach(async user => {
+                    //for each colony
+                    await user.colonies.forEach(async colony => {
+                        //calculate ores used
+                        let p1 = colony.population + 100
+                        let convertedOre = Math.floor(p1 / 30)
 
-            //for each user in base
-            await userBase.forEach(async user => {
-                //for each colony
-                await user.colonies.forEach(async colony => {
-                    //calculate ores used
-                    let p1 = colony.population + 100
-                    let convertedOre = Math.floor(p1 / 30)
+                        //check if ore storage is empty or will be after next process
+                        if(colony.oreStorage - convertedOre < 0) {
+                            //if ore storage will be empty use rest of ore
+                            convertedOre = colony.oreStorage
+                        }
 
-                    //check if ore storage is empty or will be after next process
-                    if(colony.oreStorage - convertedOre < 0) {
-                        //if ore storage will be empty use rest of ore
-                        convertedOre = colony.oreStorage
-                    }
+                        //calculate profit from planet
+                        let profit = convertedOre * client.settings.game.oreConversion
 
-                    //calculate profit from planet
-                    let profit = convertedOre * client.settings.game.oreConversion
-
-                    //set values
-                    user.credits += profit
-                    colony.oreStorage -= convertedOre
-                    
-                    //load map
-                    await client.db.collection('map').findOne({xPos: colony.xPos, yPos: colony.yPos})
-                    .then(async system => {
-                        //find and change planet
-                        await system.planets.forEach(planet => {
-                            if(planet.name == colony.name){
-                                planet.oreStorage -= convertedOre
-                            }
+                        //set values
+                        user.credits += profit
+                        colony.oreStorage -= convertedOre
+                        
+                        //load map
+                        await client.db.collection('map').findOne({xPos: colony.xPos, yPos: colony.yPos})
+                        .then(async system => {
+                            //find and change planet
+                            await system.planets.forEach(planet => {
+                                if(planet.name == colony.name){
+                                    planet.oreStorage -= convertedOre
+                                }
+                            })
+                            //save map
+                            await client.db.collection('map').update({xPos: colony.xPos, yPos: colony.yPos}, system)
                         })
-                        //save map
-                        await client.db.collection('map').update({xPos: colony.xPos, yPos: colony.yPos}, system)
+
                     })
 
+                    //save
+                    await client.db.collection('users').update({id: user.id}, user)
                 })
 
-                //save
-                await client.db.collection('users').update({id: user.id}, user)
+                //resolve
+                await resolve()
             })
-            
-            //resolve
-            await resolve()
         })
     }
 
@@ -1474,7 +1475,7 @@ module.exports = client => {
             let userBase = await client.db.collection('users').find({}).toArray()
 
             //for each user in base
-            await userBase.forEach(async user => {
+            await userBase.forEach(async user => { 
                 //for each colony
                 await user.colonies.forEach(async colony => {
                     
