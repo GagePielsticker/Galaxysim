@@ -1420,6 +1420,7 @@ module.exports = client => {
             .then(async userBase => {
                 //for each user in base
                 await userBase.forEach(async user => {
+                    if(!user.colonies) user.colonies=[]
                     //for each colony
                     await user.colonies.forEach(async colony => {
                         //calculate ores used
@@ -1476,6 +1477,7 @@ module.exports = client => {
 
             //for each user in base
             await userBase.forEach(async user => { 
+                if(!user.colonies) user.colonies=[]
                 //for each colony
                 await user.colonies.forEach(async colony => {
                     
