@@ -16,4 +16,6 @@ A text based space exploration game for discord.
 # Where to get it
 https://discordbots.org/bot/541536124326117387
 
-Needs mongodb running 
+# How to run it
+- Install and run mongodb
+- go into bot/ and run app.js in a node terminal after installing packages in there
