@@ -28,7 +28,8 @@ module.exports = client => {
 
             //setup default guild object for database
             let newGuild = {
-                id: id
+                id: id,
+                welcomeMessage: ''
             }
 
             //write guild to database
