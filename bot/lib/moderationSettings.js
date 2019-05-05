@@ -1,10 +1,10 @@
 module.exports = client => {
 
     //setup empty settings object to fill
-    mod.settings = {}
+    client.moderation.settings = {}
 
     //quality of life shortening
-    let set = mod.settings
+    let set = client.moderation.settings
 
     /**
      * Set the welcome message in guild database

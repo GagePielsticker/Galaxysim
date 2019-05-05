@@ -2,7 +2,7 @@ module.exports = client => {
 
     /**
      * Handles the message event fired by client
-     * @param {Object} message
+     * @param {Object} message discord message
      */
     client.on('message', async message => {
         if(message.author.bot) return
@@ -43,9 +43,47 @@ module.exports = client => {
 
     /**
      * Takes shard object on shard ready and outputs.
-     * @param {Object} shard
+     * @param {Object} shard shard
      */
     client.on('shardReady', shard => {
         client.log(`Shard Ready : ${shard} | total : ${client.options.shards}`)
-    })    
+    })
+    
+    /**
+     * Handles client join guild
+     * @param {Object} guild guild
+     */
+    client.on('guildCreate', async guild => {
+        
+        //loead guild entry
+        let g = await client.db.collection('guilds').findOne({id:guild.id})
+
+        //if it doesnt exist create it
+        if(g == null) await client.moderation.createGuild(guild.id)
+    })
+
+    /**
+     * Handles on user join
+     * @param {Object} member guild member
+     */
+    client.on('guildMemberAdd', async member => {
+        
+        //load guild entry
+        let g = await client.db.collection('guilds').findOne({id:member.guild.id})
+
+        //Check if the toggle is turned on
+        if(!g.welcomeToggle) return
+        
+        //Check if they have set a channel
+        if(g.welcomeChannel == '') return
+
+        //Get channel
+        let channel = await member.guild.channels.get(g.welcomeChannel)
+
+        //Format welcome message
+        let message = g.welcomeMessage.replace('{user}', `**${member.user.tag}**`)
+
+        //Attempt to send message
+        channel.send(message)
+    })
 }

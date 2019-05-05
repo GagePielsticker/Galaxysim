@@ -29,8 +29,8 @@ module.exports = client => {
             //setup default guild object for database
             let newGuild = {
                 id: id,
-                welcomeMessage: '',
-                leaveMessage: '',
+                welcomeMessage: 'Welcome to the server {user}!',
+                leaveMessage: '{user} has left the server.',
                 welcomeToggle: false,
                 leaveToggle: false,
                 welcomeChannel: '',
