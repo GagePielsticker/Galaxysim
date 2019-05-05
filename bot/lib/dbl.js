@@ -19,11 +19,10 @@ module.exports = client => {
                 client.log('Couldnt post stats to DBL')
             }
 
-            client.boat.postStats(client.guilds.size, '541536124326117387').then(() => {
-                client.log('Successfully updated server count.')
-            }).catch((e) => {
+            client.boat.postStats(client.guilds.size, '541536124326117387').catch((e) => {
                 client.error(e)
             })
+            
         }, client.settings.DBLTimer * 1000)
     }
 }
