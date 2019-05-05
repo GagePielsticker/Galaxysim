@@ -9,8 +9,8 @@
   "author": "Gage Pielsticker",
   "license": "MIT",
   "dependencies": {
+    "boats.js": "^2.2.0",
     "cron": "^1.7.0",
-    "dblapi.js": "^2.3.0",
     "discord.js": "github:discordjs/discord.js",
     "discordboats.xyz": "^1.0.5",
     "fs": "0.0.1-security",
