@@ -135,19 +135,60 @@ module.exports = client => {
             if(g.chatLogChannel == '') return
 
             //Get channel
-            let channel = await member.guild.channels.get(g.chatLogChannel)
+            let channel = await newMessage.guild.channels.get(g.chatLogChannel)
 
             //Format log message
             let embed = new client.discord.MessageEmbed()
             .setTitle('Message Edited')
             .addField('Old', `\`\`\`${oldMessage.content} \`\`\``)
-            .addfield('New', `\`\`\`${newMessage.content} \`\`\``)
-            .setFooter(`${newMessage.user.tag}`, newMessage.author.avatarURL)
+            .addField('New', `\`\`\`${newMessage.content} \`\`\``)
+            .setFooter(`${newMessage.author.tag} (${newMessage.author.id})`, newMessage.author.avatarURL())
             .setTimestamp()
             .setColor(client.settings.embedColor)
 
             //send message
-            await message.channel.send(embed)
+            await channel.send(embed)
+            .catch(e => {return})
         }
+    })
+
+    client.on('messageDelete', async message => {
+        //load guild entry
+        let g = await client.db.collection('guilds').findOne({id:message.guild.id})
+
+        //Check if the toggle is turned on
+        if(!g.chatLogToggle) return
+        
+        //Check if they have set a channel
+        if(g.chatLogChannel == '') return
+
+        //Get channel
+        let channel = await message.guild.channels.get(g.chatLogChannel)
+
+        //Format log message
+        let embed = new client.discord.MessageEmbed()
+        .setTitle('Message Deleted')
+        .setDescription(`Message deleted in <#${message.channel.id}>.`)
+        .addField('Content', `\`\`\`${message.content} \`\`\``)
+        .setTimestamp()
+        .setColor(client.settings.embedColor)
+
+        //get most recent message delete audit log
+        let entry = await message.guild.fetchAuditLogs({type: 'MESSAGE_DELETE'}).then(audit => audit.entries.first())
+        .catch(() => {return})
+
+        //Check if audit log is correct one
+        if(message.channel.id == entry.extra.channel.id 
+        && entry.target.id == message.author.id
+        && entry.createdTimestamp > Date.now() - 5000
+        && entry.extra.count >= 1) {
+            embed.setFooter(`${entry.executor.tag} (${entry.executor.id})`, entry.executor.avatarURL())
+        } else {
+            embed.setFooter(`${message.author.tag} (${message.author.id})`, message.author.avatarURL())
+        }
+
+        //send message
+        await channel.send(embed)
+        .catch(() => {return})
     })
 }

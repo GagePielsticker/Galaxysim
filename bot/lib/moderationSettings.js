@@ -23,7 +23,7 @@ module.exports = client => {
             if(string.length == 0) return reject('You supplied an empty string.')
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{welcomeMessage:string}}, {upsert:true})
@@ -50,7 +50,7 @@ module.exports = client => {
             if(string.length == 0) return reject('You supplied an empty string.')
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{leaveMessage:string}}, {upsert:true})
@@ -74,7 +74,7 @@ module.exports = client => {
             let guild = await client.db.collection('guilds').findOne({id: id})
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{leaveToggle:bool}}, {upsert:true})
@@ -98,7 +98,7 @@ module.exports = client => {
             let guild = await client.db.collection('guilds').findOne({id: id})
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{welcomeToggle:bool}}, {upsert:true})
@@ -122,7 +122,7 @@ module.exports = client => {
             let guild = await client.db.collection('guilds').findOne({id: id})
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{welcomeChannel:channel}}, {upsert:true})
@@ -146,7 +146,7 @@ module.exports = client => {
             let guild = await client.db.collection('guilds').findOne({id: id})
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{leaveChannel:channel}}, {upsert:true})
@@ -170,7 +170,7 @@ module.exports = client => {
             let guild = await client.db.collection('guilds').findOne({id: id})
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{chatLogChannel:channel}}, {upsert:true})
@@ -194,7 +194,7 @@ module.exports = client => {
             let guild = await client.db.collection('guilds').findOne({id: id})
 
             //check if executor has administrator permissions
-            if(!mod.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
+            if(!client.moderation.hasPerm(id, executor, 'ADMINISTRATOR')) return reject('User is not administrator.')
             
             //set welcome message to string in database
             client.db.collection('guilds').updateOne({id:id}, {$set:{chatLogToggle:bool}}, {upsert:true})
