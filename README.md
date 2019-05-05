@@ -4,7 +4,8 @@ A text based space exploration game for discord.
 - 700+ active registered players
 
 # Where stuff is
-- Main game functionality in bot/lib/game.js (also contains like 90% of the code)
+- Main game functionality in bot/lib/game.js
+- Main moderation functionality in bot/lib/moderation.js 
 - commands in bot/commands/
 - site stored in site/
 
