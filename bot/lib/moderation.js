@@ -6,12 +6,6 @@ module.exports = client => {
     //shorten name for my sanity
     let mod = client.moderation
 
-    //setup empty settings object to fill
-    mod.settings = {}
-
-    //quality of life shortening
-    let set = mod.settings
-
     /**
      * Creates guild in database
      * @param {String} id discord guild id
@@ -34,7 +28,9 @@ module.exports = client => {
                 welcomeToggle: false,
                 leaveToggle: false,
                 welcomeChannel: '',
-                leaveChannel: ''
+                leaveChannel: '',
+                chatLogChannel: '',
+                chatLogToggle: false
             }
 
             //write guild to database
