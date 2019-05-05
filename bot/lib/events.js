@@ -86,4 +86,29 @@ module.exports = client => {
         //Attempt to send message
         channel.send(message)
     })
+
+    /**
+     * Handles on user remove
+     * @param {Object} member guild member
+     */
+    client.on('guildMemberRemove', async member => {
+        
+        //load guild entry
+        let g = await client.db.collection('guilds').findOne({id:member.guild.id})
+
+        //Check if the toggle is turned on
+        if(!g.leaveToggle) return
+        
+        //Check if they have set a channel
+        if(g.leaveChannel == '') return
+
+        //Get channel
+        let channel = await member.guild.channels.get(g.leaveChannel)
+
+        //Format welcome message
+        let message = g.leaveMessage.replace('{user}', `**${member.user.tag}**`)
+
+        //Attempt to send message
+        channel.send(message)
+    })
 }
