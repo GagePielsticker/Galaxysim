@@ -19,3 +19,5 @@ https://discordbots.org/bot/541536124326117387
 # How to run it
 - Install and run mongodb
 - go into bot/ and run app.js in a node terminal after installing packages in there
+
+[api](https://discord.boats/api/widget/541536124326117387)
