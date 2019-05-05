@@ -30,7 +30,9 @@ module.exports = client => {
                 welcomeChannel: '',
                 leaveChannel: '',
                 chatLogChannel: '',
-                chatLogToggle: false
+                chatLogToggle: false,
+                autoRoleRole: '',
+                autoRoleToggle: false
             }
 
             //write guild to database
