@@ -32,7 +32,9 @@ module.exports = client => {
                 welcomeMessage: '',
                 leaveMessage: '',
                 welcomeToggle: false,
-                leaveToggle: false
+                leaveToggle: false,
+                welcomeChannel: '',
+                leaveChannel: ''
             }
 
             //write guild to database
