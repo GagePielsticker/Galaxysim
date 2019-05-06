@@ -30,6 +30,7 @@ module.exports = client => {
 
         //execute function
         client.game.regenerateAsteroids()
+        .then(() => client.log('generated asteroids'))
 
     }, null, true, 'America/Los_Angeles')
 }
