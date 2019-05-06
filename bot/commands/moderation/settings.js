@@ -26,32 +26,33 @@ Note: For welcome and leave messages, put in {user} for user mention in the mess
                 let guild = await client.db.collection('guilds').findOne({id:message.guild.id})
                 let embed = new client.discord.MessageEmbed()
                 embed.setTitle('Guild Settings')
-                embed.addField('Welcomes', `\`${guild.welcomeToggle}\``, true)
-                embed.addField('Leaves', `\`${guild.leaveToggle}\``, true)
-                embed.addField('ChatLog', `\`${guild.chatLogToggle}\``, true)
-                embed.addField('AutoRole', `\`${guild.autoRoleToggle}\``, true)
+                if(guild.welcomeToggle) embed.addField('Welcomes', `\`On\``, true)
+                    else embed.addField('Welcomes', `\`Off\``, true)
+
+                if(guild.leaveToggle) embed.addField('Leaves', `\`On\``, true)
+                    else embed.addField('Leaves', `\`Off\``, true)
+
+                if(guild.chatLogToggle) embed.addField('ChatLog', `\`On\``, true)
+                    else embed.addField('ChatLog', `\`Off\``, true)
+
+                if(guild.autoRoleToggle) embed.addField('AutoRole', `\`On\``, true)
+                    else embed.addField('AutoRole', `\`Off\``, true)
+
                 embed.addField('Welcome Message', `\`${guild.welcomeMessage}\``, true)
                 embed.addField('Leave Message', `\`${guild.leaveMessage}\``, true)
-                if(guild.welcomeChannel != '') {
-                    embed.addField('Welcome Channel', `<#${guild.welcomeChannel}>`, true)
-                } else {
-                    embed.addField('Welcome Channel', `\`none\``, true)
-                }
-                if(guild.leaveChannel != ''){
-                    embed.addField('Leave Channel', `<#${guild.leaveChannel}>`, true)
-                } else {
-                    embed.addField('Leave Channel', `\`none\``, true)
-                }
-                if(guild.chatLogChannel != '') {
-                    embed.addField('ChatLog Channel', `<#${guild.chatLogChannel}>`, true)
-                } else {
-                    embed.addField('ChatLog Channel', `\`none\``, true)
-                }
-                if(guild.autoRoleRole != '') {
-                    embed.addField('AutoRole Role', `<@&${guild.autoRoleRole}>`, true)
-                } else {
-                    embed.addField('AutoRole Role', `\`none\``, true)
-                }
+
+                if(guild.welcomeChannel != '') embed.addField('Welcome Channel', `<#${guild.welcomeChannel}>`, true)
+                    else embed.addField('Welcome Channel', `\`none\``, true)
+                
+                if(guild.leaveChannel != '') embed.addField('Leave Channel', `<#${guild.leaveChannel}>`, true)
+                    else embed.addField('Leave Channel', `\`none\``, true)
+
+                if(guild.chatLogChannel != '') embed.addField('ChatLog Channel', `<#${guild.chatLogChannel}>`, true)
+                    else embed.addField('ChatLog Channel', `\`none\``, true)
+                
+                if(guild.autoRoleRole != '') embed.addField('AutoRole Role', `<@&${guild.autoRoleRole}>`, true)
+                    else embed.addField('AutoRole Role', `\`none\``, true)
+                    
                 embed.setFooter(`${message.author.tag}`, message.author.avatarURL())
                 embed.setTimestamp()
                 embed.setColor(client.settings.embedColor)
