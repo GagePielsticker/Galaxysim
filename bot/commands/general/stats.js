@@ -15,6 +15,7 @@ module.exports.load = client => {
             .addField('Language', '\`NodeJS\`', true)
             .addField('Support Server', `[Click Here](${client.settings.supportServer})`, true)
             .addField('Website', `[Click Here](${client.settings.websiteURL})`, true)
+            .addField('Github', `[Click Here](${client.settings.githubURL})`, true)
             .addField('Developer', `uber#0001`, true)
             .setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
             .setTimestamp()

@@ -1,11 +1,12 @@
 {
-    "devMode" : false,
+    "devMode" : true,
     "developers" : ["174511937151827969"],
     "gameMasters" : ["174511937151827969"],
     "botDescription" : "GalaxySim is a galactic conquest simulator letting user explore, interact, and fight over millions of star systems.",
     "token" : "",
     "betaToken" : "",
     "dblToken" : "",
+    "dboatsToken" : "",
     "prefix" : "g$",
     "betaPrefix" : "g$$",
     "activity" : "g$help", 
@@ -15,6 +16,7 @@
     "inviteURL" : "https://discordapp.com/oauth2/authorize?&client_id=541536124326117387&scope=bot&permissions=2146958463",
     "supportServer" : "https://discordapp.com/invite/yMsvHZx",
     "websiteURL" : "https://galaxysim.xyz",
+    "githubURL" : "https://github.com/GagePielsticker/Galaxysim",
 
     "mongodbURL" : "mongodb://localhost:27017",
 
