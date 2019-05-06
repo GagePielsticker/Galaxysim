@@ -74,20 +74,31 @@ module.exports = client => {
         //load guild entry
         let g = await client.db.collection('guilds').findOne({id:member.guild.id})
 
-        //Check if the toggle is turned on
-        if(!g.welcomeToggle) return
-        
-        //Check if they have set a channel
-        if(g.welcomeChannel == '') return
+        //Check if the welcome toggle is turned on
+        if(g.welcomeToggle) {
 
-        //Get channel
-        let channel = await member.guild.channels.get(g.welcomeChannel)
+            //Check if they have set a channel
+            if(g.welcomeChannel != '') {
+                //Get channel
+                let channel = await member.guild.channels.get(g.welcomeChannel)
 
-        //Format welcome message
-        let message = g.welcomeMessage.replace('{user}', `**${member.user.tag}**`)
+                //Format welcome message
+                let message = await g.welcomeMessage.replace('{user}', `**${member.user.tag}**`)
 
-        //Attempt to send message
-        channel.send(message)
+                //Attempt to send message
+                await channel.send(message)
+            }
+        }
+
+        //Check if the autorole toggle is turned on
+        if(g.autoRoleToggle) {
+
+            //check if role is set
+            if(g.autoRoleRole != '') {
+
+                await member.addRole(g.autoRoleRole)
+            }
+        }
     })
 
     /**
