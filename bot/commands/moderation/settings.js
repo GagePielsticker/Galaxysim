@@ -3,7 +3,8 @@ module.exports.load = client => {
         settings : {
             type : 'moderation',
             description : 'Usefull settings to help moderate your server.',
-            usage : `${client.settings.prefix}settings welcomes {on/off}
+            usage : `${client.settings.prefix}settings list
+${client.settings.prefix}settings welcomes {on/off}
 ${client.settings.prefix}settings leaves {on/off}
 ${client.settings.prefix}settings welcome_message {string}
 ${client.settings.prefix}settings leave_message {string}
@@ -19,6 +20,43 @@ Note: For welcome and leave messages, put in {user} for user mention in the mess
 
         async run(message) {
             let args = message.content.split(' ').splice(1)
+
+            //see all settingsoh
+            if(args[0] == 'list'){
+                let guild = await client.db.collection('guilds').findOne({id:message.guild.id})
+                let embed = new client.discord.MessageEmbed()
+                embed.setTitle('Guild Settings')
+                embed.addField('Welcomes', `\`${guild.welcomeToggle}\``, true)
+                embed.addField('Leaves', `\`${guild.leaveToggle}\``, true)
+                embed.addField('ChatLog', `\`${guild.chatLogToggle}\``, true)
+                embed.addField('AutoRole', `\`${guild.autoRoleToggle}\``, true)
+                embed.addField('Welcome Message', `\`${guild.welcomeMessage}\``, true)
+                embed.addField('Leave Message', `\`${guild.leaveMessage}\``, true)
+                if(guild.welcomeChannel != '') {
+                    embed.addField('Welcome Channel', `<#${guild.welcomeChannel}>`, true)
+                } else {
+                    embed.addField('Welcome Channel', `\`none\``, true)
+                }
+                if(guild.leaveChannel != ''){
+                    embed.addField('Leave Channel', `<#${guild.leaveChannel}>`, true)
+                } else {
+                    embed.addField('Leave Channel', `\`none\``, true)
+                }
+                if(guild.chatLogChannel != '') {
+                    embed.addField('ChatLog Channel', `<#${guild.chatLogChannel}>`, true)
+                } else {
+                    embed.addField('ChatLog Channel', `\`none\``, true)
+                }
+                if(guild.autoRoleRole != '') {
+                    embed.addField('AutoRole Role', `<@&${guild.autoRoleRole}>`, true)
+                } else {
+                    embed.addField('AutoRole Role', `\`none\``, true)
+                }
+                embed.setFooter(`${message.author.tag}`, message.author.avatarURL())
+                embed.setTimestamp()
+                embed.setColor(client.settings.embedColor)
+                message.channel.send(embed)
+            }
 
             //welcome toggles
             if(args[0] == 'welcomes') {
@@ -44,13 +82,9 @@ Note: For welcome and leave messages, put in {user} for user mention in the mess
             if(args[0] == 'welcome_channel') {
                 let channel = args[1].replace(/[<#!>]/g, '')
                 if(channel == '') return client.sendError(message, 'Invalid channel.')
-                message.guild.channels.get(channel)
-                .then(chan => {
-                    client.moderation.settings.welcomeChannel(message.guild.id, channel, message.author.id)
+                client.moderation.settings.welcomeChannel(message.guild.id, channel, message.author.id)
                     .then(() => client.sendSuccess(message, 'Successfully udpated settings.'))
                     .catch(e => client.sendError(message, e))
-                })
-                .catch(() => client.sendError(message, 'That channel doe\'s not exist.'))
             }
 
             //leave toggles
@@ -77,13 +111,9 @@ Note: For welcome and leave messages, put in {user} for user mention in the mess
             if(args[0] == 'leave_channel') {
                 let channel = args[1].replace(/[<#!>]/g, '')
                 if(channel == '') return client.sendError(message, 'Invalid channel.')
-                message.guild.channels.get(channel)
-                .then(chan => {
-                    client.moderation.settings.leaveChannel(message.guild.id, channel, message.author.id)
+                client.moderation.settings.leaveChannel(message.guild.id, channel, message.author.id)
                     .then(() => client.sendSuccess(message, 'Successfully udpated settings.'))
                     .catch(e => client.sendError(message, e))
-                })
-                .catch(() => client.sendError(message, 'That channel doe\'s not exist.'))
             }
 
             //chatlog toggles
@@ -101,13 +131,9 @@ Note: For welcome and leave messages, put in {user} for user mention in the mess
             if(args[0] == 'chatlog_channel') {
                 let channel = args[1].replace(/[<#!>]/g, '')
                 if(channel == '') return client.sendError(message, 'Invalid channel.')
-                message.guild.channels.get(channel)
-                .then(chan => {
-                    client.moderation.settings.chatLogChannel(message.guild.id, channel, message.author.id)
+                client.moderation.settings.chatLogChannel(message.guild.id, channel, message.author.id)
                     .then(() => client.sendSuccess(message, 'Successfully udpated settings.'))
                     .catch(e => client.sendError(message, e))
-                })
-                .catch(() => client.sendError(message, 'That channel doe\'s not exist.'))
             }
 
             //autorole toggles
@@ -127,7 +153,7 @@ Note: For welcome and leave messages, put in {user} for user mention in the mess
 
             //autorole role setting
             if(args[0] == 'autorole_role') {
-                let role = args[1].replace(/[<@!>]/g, '')
+                let role = args[1].replace(/[<@&>]/g, '')
                 if(role == '') return client.sendError(message, 'Invalid role.')
                 message.guild.roles.get(role)
                 .then(() => {
