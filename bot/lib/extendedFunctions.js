@@ -44,6 +44,21 @@ module.exports = client => {
     }
 
     /**
+     * Creates a success discord embed and sends
+     * @param {Object} message Discords message event fire
+     * @param {String} string
+     */
+    client.sendSuccess = (message, string) => {
+        let embed = new client.discord.MessageEmbed()
+        .setTitle('Success')
+        .setDescription(`${string}`)
+        .setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
+        .setTimestamp()
+        .setColor(client.settings.embedColor)
+        message.channel.send(embed)
+    }
+
+    /**
      * Creates a check discord embed, sends, and adds them to cooldown. ONLY FOR COLLECTOR CHECKS
      * @param {Object} message Discords message event fire
      * @param {String} string
