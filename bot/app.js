@@ -26,8 +26,6 @@ if(client.settings.devMode){
 require('./lib/events.js')(client)
 require('./lib/extendedFunctions.js')(client)
 require('./lib/game.js')(client)
-require('./lib/moderation.js')(client)
-require('./lib/moderationSettings.js')(client)
 require('./lib/dbl.js')(client)
 require('./lib/database.js')(client)
 require('./lib/cronJobs.js')(client)
