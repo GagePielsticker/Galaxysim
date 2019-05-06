@@ -177,6 +177,9 @@ module.exports = client => {
         //Get channel
         let channel = await message.guild.channels.get(g.chatLogChannel)
 
+        //check if it was a bot who sent it
+        if(message.author.bot) return
+        
         //Format log message
         let embed = new client.discord.MessageEmbed()
         .setTitle('Message Deleted')
