@@ -11,13 +11,11 @@ module.exports.load = client => {
             if(message.content.split(' ').length == 1){
                 let generalCommands = []
                 let gameCommands = []
-                let modCommands = []
 
                 for(entry in Object.entries(client.commands)){
                     let command = Object.entries(client.commands)[entry]
                     if(command[1].settings.type == 'general') generalCommands.push(command[0])
                     if(command[1].settings.type == 'game') gameCommands.push(command[0])
-                    if(command[1].settings.type == 'moderation') modCommands.push(command[0])
                 }
 
                 let embed = new client.discord.MessageEmbed()
@@ -25,7 +23,6 @@ module.exports.load = client => {
                 .setDescription(`Use \`${client.settings.prefix}help {command}\` to learn more about the command.`)
                 .addField('General', `\`\`\`${generalCommands.join(' ')}\`\`\``)
                 .addField('Game', `\`\`\`${gameCommands.join(' \n')}\`\`\``)
-                .addField('Administrative', `\`\`\`${modCommands.join(' ')}\`\`\`Voting [here](https://discordbots.org/bot/541536124326117387/vote) grants a 20% boost to industry.\nFor assistance click [here](https://discord.gg/yMsvHZx).\nTo support the game & rewards click [here](https://www.patreon.com/galaxysim).`)
                 .setFooter(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
                 .setTimestamp()
                 .setColor(client.settings.embedColor)

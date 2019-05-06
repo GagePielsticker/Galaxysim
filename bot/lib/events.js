@@ -39,7 +39,6 @@ module.exports = client => {
         client.loadCommandFolder('general').then(client.log('Successfully loaded general commands.'))
         client.loadCommandFolder('developer').then(client.log('Successfully loaded developer commands.'))
         client.loadCommandFolder('game').then(client.log('Successfully loaded game commands.'))
-        client.loadCommandFolder('moderation').then(client.log('Successfully loaded moderation commands.'))    
         client.connectDb().then(client.log('Connected Database.'))
         client.user.setActivity(client.settings.activity, { type: 'Playing' }) 
     })
