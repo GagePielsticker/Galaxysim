@@ -177,9 +177,9 @@ module.exports = client => {
         //Get channel
         let channel = await message.guild.channels.get(g.chatLogChannel)
 
-        //check if it was a bot who sent it
+        //check if message is bot
         if(message.author.bot) return
-        
+
         //Format log message
         let embed = new client.discord.MessageEmbed()
         .setTitle('Message Deleted')
@@ -194,9 +194,7 @@ module.exports = client => {
 
         //Check if audit log is correct one
         if(message.channel.id == entry.extra.channel.id 
-        && entry.target.id == message.author.id
-        && entry.createdTimestamp > Date.now() - 5000
-        && entry.extra.count >= 1) {
+        && entry.target.id == message.author.id) {
             embed.setFooter(`${entry.executor.tag} (${entry.executor.id})`, entry.executor.avatarURL())
         } else {
             embed.setFooter(`${message.author.tag} (${message.author.id})`, message.author.avatarURL())
