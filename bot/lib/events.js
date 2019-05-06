@@ -74,6 +74,9 @@ module.exports = client => {
         //load guild entry
         let g = await client.db.collection('guilds').findOne({id:member.guild.id})
 
+        //if guild dosnt exist ignore
+        if(g == null) return
+
         //Check if the welcome toggle is turned on
         if(g.welcomeToggle) {
 
@@ -111,6 +114,9 @@ module.exports = client => {
         //load guild entry
         let g = await client.db.collection('guilds').findOne({id:member.guild.id})
 
+        //if guild dosnt exist ignore
+        if(g == null) return
+
         //Check if the toggle is turned on
         if(!g.leaveToggle) return
         
@@ -140,6 +146,9 @@ module.exports = client => {
             //load guild entry
             let g = await client.db.collection('guilds').findOne({id:newMessage.guild.id})
 
+            //if guild dosnt exist ignore
+            if(g == null) return
+
             //Check if the toggle is turned on
             if(!g.chatLogToggle) return
             
@@ -168,6 +177,9 @@ module.exports = client => {
         //load guild entry
         let g = await client.db.collection('guilds').findOne({id:message.guild.id})
 
+        //if guild dosnt exist ignore
+        if(g == null) return
+        
         //Check if the toggle is turned on
         if(!g.chatLogToggle) return
         

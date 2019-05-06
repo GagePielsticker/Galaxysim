@@ -51,9 +51,9 @@ module.exports = client => {
      * @param {String} executor executor id
      * @returns {Boolean}
      */
-    mod.hasPerm = async (id, executor, perm) => {
-        let g = await client.guilds.get(id)
-        let member = g.member(executor)
+    mod.hasPerm = (id, executor, perm) => {
+        let g = client.guilds.get(id)
+        let member = g.members.get(executor)
         if(!member.hasPermission(perm)) return false
         return true
     }
