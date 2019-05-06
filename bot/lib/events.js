@@ -96,7 +96,8 @@ module.exports = client => {
             //check if role is set
             if(g.autoRoleRole != '') {
 
-                await member.addRole(g.autoRoleRole)
+                //edit user to include role
+                await member.edit({ roles : [g.autoRoleRole] })
             }
         }
     })
