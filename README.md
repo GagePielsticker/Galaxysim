@@ -21,3 +21,8 @@ https://discordbots.org/bot/541536124326117387
 - go into bot/ and run app.js in a node terminal after installing packages in there
 
 ![api](https://discord.boats/api/widget/541536124326117387)
+
+# What is it made of?
+- Magic
+- Fun times
+- dead dreasm
