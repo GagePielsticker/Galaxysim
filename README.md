@@ -1,7 +1,7 @@
 # Galaxysim
 A text based space exploration game for discord.
 - in 500+ communities
-- 700+ active registered players
+- 710+ active registered players
 
 # Where stuff is
 - Main bot functionality is handled in the bot/lib/ directory
