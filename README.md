@@ -1,6 +1,6 @@
 # Galaxysim
 A text based space exploration game for discord.
-- in 500+ communities
+- in 510+ communities
 - 710+ active registered players
 
 # Where stuff is
