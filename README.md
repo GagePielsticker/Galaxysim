@@ -1,7 +1,7 @@
 # Galaxysim
 A text based space exploration game for discord.
-- in 500+ communities
-- 700+ active registered players
+- in 510+ communities
+- 710+ active registered players
 
 # Where stuff is
 - Main bot functionality is handled in the bot/lib/ directory
@@ -21,3 +21,8 @@ https://discordbots.org/bot/541536124326117387
 - go into bot/ and run app.js in a node terminal after installing packages in there
 
 ![api](https://discord.boats/api/widget/541536124326117387)
+
+# What is it made of?
+- Magic
+- Fun times
+- dead dreasm
