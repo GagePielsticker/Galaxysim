@@ -13,6 +13,7 @@ client.fs = require('fs')
 client.nameGenerator = require('project-name-generator')
 client.cron = require('cron').CronJob
 client.humanize = require('humanize-duration')
+client.chance = require('chance').Chance()
 client.dbl = new DBL(client.settings.dblToken, { webhookPort: 5000 })
 client.boat = new Boat(client.settings.dboatsToken)
 

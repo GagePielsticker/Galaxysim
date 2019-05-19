@@ -606,7 +606,7 @@ module.exports = client => {
 
             await setTimeout(() => {
                 //move user
-                client.db.collection('users').update({id:user}, {$set:{xPos:xPos, yPos:yPos}})
+                client.db.collection('users').update({id:user}, {$set:{xPos:xPos, yPos:yPos, passiveMove: true}})
 
                 //remove fuel
                 profile.ship.fuel -= distance
@@ -1100,7 +1100,7 @@ module.exports = client => {
                 await setTimeout(async () => {
 
                     //move user
-                    await client.db.collection('users').update({id:user}, {$set:{xPos:closestColony.xPos, yPos:closestColony.yPos}})
+                    await client.db.collection('users').update({id:user}, {$set:{xPos:closestColony.xPos, yPos:closestColony.yPos,  passiveMove: true}})
 
                     //set user fuel to max
                     await client.db.collection('users').update({id:user}, {$set:{"ship.fuel":profile.ship.maxFuel}})
@@ -1919,6 +1919,92 @@ module.exports = client => {
 
            //resolve
            resolve()
+        })
+    }
+    
+    /**
+     * Scan the system for other players
+     * @param {String} user
+     * @param {Integer} page
+     */
+    client.game.pvpScan = (user, page) => {
+        return new Promise(async (resolve, reject) => {
+          // check if the page is valid
+          if(!Number.isInteger(page) || page < 0) return reject('Page invalid.')
+          
+          // load user profile
+          let profile = await client.db.collection('users').findOne({id: user})
+          
+          // find users at this location and make an array, initialize output
+          let output = []
+          let users = await client.db.collection('users').find({xPos: profile.xPos, yPos: profile.yPos}).toArray()
+          if(users.length <= 0) return reject("There are no players in your system")
+          for(let j = client.settings.game.usersPerPage * page - client.settings.game.usersPerPage; j <= client.settings.game.usersPerPage * page - 1; j++){
+             if(users[j]){
+                  await client.users.fetch(users[j].id)
+                  .then(u => {
+                      if(u.id !== user) output.push(`${j}.) ${u.tag}`)
+                  })
+              }
+          }
+          
+          if(output.length <= 0) return reject("There are no players on that page")
+          
+          // resolve the players
+          return resolve(output)
+        })
+    }
+    
+
+    /**
+     * Attack a user in the system
+     * @param {String} user
+     * @param {String} target user
+     */ 
+    client.game.pvpAttack = (user, target) => {
+        return new Promise(async (resolve, reject) => {
+            // Don't allow user to attack themselves
+            if(user == target) return reject("You can't attack yourself")
+          
+            // load user profile
+            let profile = await client.db.collection('users').findOne({id: user})
+            
+            // find users at location and see if target is in the system
+            let users = await client.db.collection('users').find({xPos: profile.xPos, yPos: profile.yPos}).toArray()
+            let enemyUser = null
+            for(let i = 0; i < users.length; i++){
+                if(users[i].id === target){
+                  enemyUser = users[i]
+                  break
+                }
+            }
+            if(!enemyUser) return reject("Target not found in system")
+            if(enemyUser.passiveMode && (enemyUser.passiveMode > Date.now() || !enemyUser.passiveMove)) return reject("Player is in passive mode")
+            
+            // see who wins the fight
+            if(client.chance.weighted([1, 2], [profile.ship.attack, enemyUser.ship.defense]) == 1){
+                // let xSpawn = await Math.floor(Math.random() * (client.settings.game.map.maxX - client.settings.game.map.minX + 1)) + client.settings.game.map.minX
+                // let ySpawn = await Math.floor(Math.random() * (client.settings.game.map.maxY - client.settings.game.map.minY + 1)) + client.settings.game.map.minY
+                let gain = enemyUser.credits*0.3
+                profile.credits += gain
+                enemyUser.credits -= gain
+                // enemyUser.xPos = xSpawn
+                // enemyUser.yPos = ySpawn
+                await client.db.collection('users').findOneAndUpdate({id:user}, {$set:{credits:profile.credits, passiveMode: false, passiveMove: true}})
+                await client.db.collection('users').findOneAndUpdate({id:target}, {$set:{credits: enemyUser.credits, ship: client.settings.game.startingShip, passiveMode: Date.now() + 7200000, passiveMove: false}})
+                return resolve(`Won the fight and gained: ${gain} credits`)
+            }else{
+                // let xSpawn = await Math.floor(Math.random() * (client.settings.game.map.maxX - client.settings.game.map.minX + 1)) + client.settings.game.map.minX
+                // let ySpawn = await Math.floor(Math.random() * (client.settings.game.map.maxY - client.settings.game.map.minY + 1)) + client.settings.game.map.minY
+                let gain = profile.credits*0.3
+                enemyUser.credits += gain
+                profile.credits -= gain
+                // profile.xPos = xSpawn
+                // profile.yPos = ySpawn
+                await client.db.collection('users').findOneAndUpdate({id:target}, {$set:{credits:enemyUser.credits}})
+                await client.db.collection('users').findOneAndUpdate({id:user}, {$set:{credits: profile.credits, ship: client.settings.game.startingShip, passiveMode: Date.now() + 7200000, passiveMove: false}})
+                return resolve(`Lost the fight`)
+            }
         })
     }
 

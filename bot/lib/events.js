@@ -9,7 +9,7 @@ module.exports = client => {
         //basic command handling
         if(message.author.bot) return
         if(!message.content.toLowerCase().startsWith(client.settings.prefix)) return
-        let command = message.content.split(' ')[0].replace(client.settings.prefix, '')
+        let command = message.content.split(' ')[0].replace(client.settings.prefix, '').toLowerCase()
         if(!client.commandExist(command)) return
 
         //If command is game related, check to see if the user exist in db
