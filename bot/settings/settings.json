@@ -85,7 +85,7 @@
 
         "system" : {
             "maxPlanets" : 6,
-            "maxAsteroids" : 50000
+            "maxAsteroids" : 1000000
         },
 
         "planet" : {
